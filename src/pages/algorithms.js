@@ -86,7 +86,7 @@ const Algorithms = ({algorithms, folders}) => {
                     {tabIndex === 1 && <div className={styles.algoList}>
                         <div style={{alignItems: "flex-end", display: "flex", gap: "10px", flexDirection: "column", maxWidth: "1125px", width: "inherit"}}>
                             {folders && folders
-                                .filter(item => !item.parent)
+                                .filter(item => !item.parentId)
                                 .map((item, index) => {
                                     return (
                                         <NavigationTree key={index}
