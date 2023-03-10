@@ -1,0 +1,89 @@
+.algorithmsPage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+
+
+    height: 100vh;
+    padding: 0 10px;
+    background: rgb(250, 251, 255);
+}
+
+.header {
+    height: 40px;
+}
+
+.algoList {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+    height: calc(100vh - 106px);
+    gap: 10px;
+    overflow: hidden scroll;
+    padding: 0 70px 30px;
+}
+
+.algoListItem {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    width: 100%;
+    height: fit-content;
+    padding: 10px;
+
+    border-radius: 8px;
+    background: #ECEDF4;
+}
+
+.tableHeader {
+    text-align: start;
+}
+
+
+.tabs {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+
+.tabsBody {
+    overflow: hidden auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+
+    width: calc(100vw - 70px);
+    padding: 0 25px 30px 0;
+}
+
+.tab {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+
+    width: fit-content;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.tab:hover {
+    background: #ECEDF4;
+
+}
+
+.checked {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+
+    width: fit-content;
+    padding: 5px 10px;
+    border-bottom: 2px solid #6F7CA0;
+    cursor: pointer;
+
+}

@@ -1,0 +1,194 @@
+.modal {
+    position: absolute;
+    top:0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    box-sizing: border-box;
+    width: 600px;
+    height: fit-content;
+    padding: 30px;
+    margin: auto;
+
+    border-radius: 4px;
+
+    background: #FFFFFF;
+}
+
+
+
+.primaryButton {
+    width: fit-content;
+    height: 38px;
+    padding: 8px 30px;
+    margin: 0 20px 0 0;
+
+    background: #3961FF;
+    outline: none;
+    border: none;
+    border-radius: 4px;
+
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 22px;
+    color: #FFFFFF;
+}
+
+.primaryButton:hover {
+    background: #0000BF;
+}
+
+.primaryButton:active {
+    background: #162251;
+}
+
+.primaryButton:disabled {
+    background: #B7BDD0;
+}
+
+.secondaryButton {
+    width: fit-content;
+    height: 38px;
+    padding: 7px 30px;
+
+    background: #FFFFFF;
+    outline: none;
+    border: 1px solid #3961FF;
+    border-radius: 4px;
+
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 22px;
+    color: #3961FF;
+
+}
+
+.secondaryButton:hover {
+    border: 1px solid #0000BF;
+    color: #0000BF;
+}
+
+.secondaryButton:active {
+    border: 1px solid #162251;
+    color: #162251;
+}
+
+.secondaryButton:disabled {
+    border: 1px solid #6F7CA0;
+    color: #6F7CA0;
+}
+
+
+
+
+.back {
+    position: absolute;
+    top:0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+
+    width: 100vw;
+    height: 100vh;
+    margin: auto;
+
+    background: rgba(0, 0, 0, 0.5)
+}
+
+
+.tabs {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+
+.tabsBody {
+    overflow: hidden auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+
+    width: calc(100vw - 70px);
+    padding: 0 25px 30px 0;
+}
+
+.tab {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+
+    width: fit-content;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.tab:hover {
+    background: #ECEDF4;
+
+}
+
+.checked {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+
+    width: fit-content;
+    padding: 5px 10px;
+    border-bottom: 2px solid #6F7CA0;
+    cursor: pointer;
+
+}
+
+
+.algorithmItem {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+
+    width: 80%;
+    max-width: 1100px;
+    height: fit-content;
+
+    padding: 10px 20px;
+    border-radius: 8px;
+    background: #ecedf4;
+    cursor: pointer;
+    user-select: none;
+}
+
+.algorithmItem:hover {
+    background: #b7bdd0;
+}
+
+
+
+.algorithmItem > div {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+}
+
+.xButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    content: url("/x.svg");
+}
+
+.xButton:hover {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    content: url("/x-hover.svg");
+}

@@ -1,0 +1,72 @@
+.gridNav {
+    width: 860px;
+    height: fit-content;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+    padding: 0 30px;
+}
+
+
+.gridNavItem {
+    width: 200px;
+    min-height: 100px;
+    background: #ECEDF4;
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 8px;
+    text-align: center;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    //font-family: "Courier New", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 20px;
+    cursor: pointer;
+}
+
+.gridNavItem:hover {
+    background: #2D334D;
+    color: #FFFFFF;
+}
+
+.modal {
+    position: absolute;
+    top:0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    box-sizing: border-box;
+    width: 600px;
+    height: fit-content;
+    padding: 30px;
+    margin: auto;
+
+    border-radius: 4px;
+
+    background: #FFFFFF;
+}
+
+.back {
+    position: absolute;
+    top:0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+
+    width: 100vw;
+    height: 100vh;
+    margin: auto;
+
+    background: rgba(0, 0, 0, 0.5)
+}
