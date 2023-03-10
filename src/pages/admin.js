@@ -2,8 +2,8 @@ import {useEffect, useState} from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Modal, Spinner, Table} from "reactstrap";
 import {useFormInput} from "@/utils/hooks";
-import styles from '@/styles/Admin.module.css'
-import Image from "next/image";
+import styles from '@/styles/Admin.module.css';
+import {v4 as uuidv4} from 'uuid';
 import Link from "next/link";
 
 
@@ -231,6 +231,21 @@ export default function Admin() {
     // //Управление детерминантами
     // const [algorithmId, setAlgorithmId] = useState(undefined);
 
+
+
+
+    const OnBuildHandle = () => {
+        let requestOptions = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+
+        fetch(`https://bba65mmb49ker14nr711.containers.yandexcloud.net/`, requestOptions)
+            .then(response => response.json())
+            .catch(error => console.log('error', error));
+    }
     return (
 
         <div style={{
@@ -256,10 +271,12 @@ export default function Admin() {
                 <div style={{display: "flex", justifyContent: "space-between", width: "80%", maxWidth: "1125px", padding: "0 25px 0 0"}}>
                     <div className={styles.tabs}>
                         <div className={tabIndex === 0 ? styles.checked : styles.tab} onClick={() => setTabIndex(0)}>
+                            <img width={"20px"} height={"20px"} src={"/add.svg"} onClick={e => handleAlgoShow(e)}/>
                             <span className="typography-subtitle1">Algorithms</span>
                             <span className="typography-caption2">{algorithms.length}</span>
                         </div>
                         <div className={tabIndex === 1 ? styles.checked : styles.tab} onClick={() => setTabIndex(1)}>
+                            <img width={"20px"} height={"20px"} src={"/add.svg"} onClick={e => handleFolderShow(e)}/>
                             <span className="typography-subtitle1">Folders</span>
                             <span className="typography-caption2">{folders.length}</span>
                         </div>
@@ -417,6 +434,10 @@ export default function Admin() {
 
 
                 </div>
+
+
+
+                <button onClick={OnBuildHandle}>Собрать</button>
 
             </> : <Spinner/>}
             {/*{algorithms && folders && determinants ?*/}

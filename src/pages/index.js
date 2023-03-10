@@ -1,6 +1,6 @@
 import Link from "next/link"
 import styles from '@/styles/Index.module.css'
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useFormInput} from "@/utils/hooks";
 
 
@@ -8,6 +8,7 @@ export default function Index() {
     const [show, setShow] = useState(false);
     const login = useFormInput('');
     const password = useFormInput('');
+    const [token, setToken] = useState(undefined);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -23,6 +24,11 @@ export default function Index() {
         sessionStorage && sessionStorage.removeItem("accessToken");
         window.location.reload();
     }
+
+    useEffect(() => {
+        setToken(sessionStorage.getItem("accessToken"))
+    }, [show])
+
     return (
         <>
             {/*<Head>*/}
@@ -152,12 +158,12 @@ export default function Index() {
                     <div className={styles.gridNavItem}>Сервис аппроксимации</div>
                     <div className={styles.gridNavItem}>Документация</div>
                     <div className={styles.gridNavItem}>Публикации</div>
-                    {(typeof window !== 'undefined') && sessionStorage.getItem("accessToken") ?
+                    {token ?
                         <div className={styles.gridNavItem} onClick={handleExit}>Выйти</div>
                         :
                         <div className={styles.gridNavItem} onClick={handleShow}>Авторизация</div>
                     }
-                    {(typeof window !== 'undefined') && sessionStorage.getItem("accessToken") &&
+                    {token &&
                     <Link href={"/admin"}>
                         <div className={styles.gridNavItem}>Управление</div>
                     </Link>}
