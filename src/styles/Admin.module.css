@@ -193,3 +193,7 @@
     right: 10px;
     content: url("/x-hover.svg");
 }
+
+.tableHeader {
+    text-align: start;
+}

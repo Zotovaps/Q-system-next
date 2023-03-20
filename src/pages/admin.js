@@ -227,9 +227,9 @@ export default function Admin() {
         }
     }
 
-    //
-    // //Управление детерминантами
-    // const [algorithmId, setAlgorithmId] = useState(undefined);
+
+    //Управление детерминантами
+    const [algorithmId, setAlgorithmId] = useState(undefined);
 
 
 
@@ -246,6 +246,8 @@ export default function Admin() {
             .then(response => response.json())
             .catch(error => console.log('error', error));
     }
+
+
     return (
 
         <div style={{
@@ -433,6 +435,71 @@ export default function Admin() {
                     </div>}
 
 
+                    {tabIndex === 2 && <div className={styles.tabsBody}>
+                        <select value={algorithmId} onChange={e => setAlgorithmId(e.target.value)}>
+                            <option value={undefined}/>
+
+                            {algorithms && algorithms.map((algorithm, index) => {
+                                return (
+                                    <option key={index} value={algorithm.algorithmId}>{algorithm.nameEn}</option>
+                                )
+                            })}
+                        </select>
+
+                        {algorithmId && <table>
+                            <thead>
+                                <tr style={{height: "30px"}}>
+                                    <th className={styles.tableHeader}>
+                                        <span className="typography-subtitle2" style={{color: "#6F7CA0"}}>Dimensions</span>
+                                    </th>
+                                    {determinants.length > 0 && determinants.find(item => item.algorithmId === algorithmId)?.iterations &&
+                                        <th className={styles.tableHeader}>
+                                            <span className="typography-subtitle2" style={{color: "#6F7CA0"}}>Iterations</span>
+                                        </th>
+                                    }
+                                    <th className={styles.tableHeader}>
+                                        <span className="typography-subtitle2" style={{color: "#6F7CA0"}}>Processors</span>
+                                    </th>
+                                    <th className={styles.tableHeader}>
+                                        <span className="typography-subtitle2" style={{color: "#6F7CA0"}}>Ticks</span>
+                                    </th>
+                                    <th className={styles.tableHeader} style={{width: "50px"}}/>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                            {determinants
+                                .filter(item => item.algorithmId === algorithmId)
+                                .map((item, index) => {
+                                    return (
+
+                                        <tr key={index} style={{height: "40px"}}>
+                                            <td style={{padding: "5px 10px"}}>
+                                                <span className="typography-body2">{item.dimensions}</span>
+                                            </td>
+                                            {item.iterations &&
+                                                <td style={{padding: "5px 10px"}}>
+                                                    <span className="typography-body2">{item.iterations}</span>
+                                                </td>
+                                            }
+                                            <td style={{padding: "5px 10px"}}>
+                                                <span className="typography-body2">{item.processors}</span>
+                                            </td>
+                                            <td style={{padding: "5px 10px"}}>
+                                                <span className="typography-body2">{item.ticks}</span>
+                                            </td>
+
+                                            <td style={{padding: "0 5px"}}>
+                                                <Link key={index} href={`/algorithms/${item.algorithmId}`}>
+                                                    <img src={"/eye.svg"}/>
+                                                </Link>
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </table>}
+                    </div>}
                 </div>
 
 

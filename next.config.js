@@ -12,6 +12,10 @@ const nextConfig = {
     login: "aleeva",
     password: "aleeva"
   },
+  // i18n: {
+  //   i18n: ['en', 'ru'],
+  //   defaultLocale: 'en',
+  // }
 }
 
 module.exports = nextConfig
