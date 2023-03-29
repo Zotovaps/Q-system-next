@@ -110,27 +110,7 @@ Link {
   text-decoration: none;
 }
 
-table {
-  border-collapse: collapse;
-  width: 100%;
-  max-width: 1125px;
 
-  background: #FFFFFF;
-  box-shadow: 0px 6px 16px rgba(64, 78, 125, 0.1), 0px 1px 4px rgba(52, 65, 113, 0.1);
-}
-
-
-td, th {
-  border: 1px solid #E3E6F0;
-  text-align: left;
-  padding: 8px;
-}
-
-
-
-tbody > tr:hover {
-  background: #F5F7FB;
-}
 
 /*@media (prefers-color-scheme: dark) {*/
 /*  html {*/
@@ -156,9 +136,48 @@ tbody > tr:hover {
   background-color: #ECEDF4;
 }
 
+/* Table style*/
+table {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 1500px;
+
+  background: #FFFFFF;
+  box-shadow: 0 6px 16px rgba(64, 78, 125, 0.1), 0 1px 4px rgba(52, 65, 113, 0.1);
+}
+
+thead {
+  position: sticky;
+  top: -1px;
+  background: #6F7CA0;
+  margin: 0;
+  color: #FFFFFF;
+}
+
+thead > tr > th {
+  border: none !important;
+  text-align: left;
+  padding: 0 0 0 10px;
+}
 
 
+tbody > tr:hover {
+  background: #F5F7FB;
+}
 
+tbody > tr > td {
+  border: 1px solid #E3E6F0 !important;
+  text-align: left;
+  padding: 8px;
+}
+
+tbody > tr > td:last-child {
+  padding: 0;
+  text-align: center;
+}
+
+
+/* Buttons style*/
 .primaryButton {
   width: fit-content;
   height: 38px;
@@ -196,30 +215,30 @@ tbody > tr:hover {
 
   background: #FFFFFF;
   outline: none;
-  border: 1px solid #3961FF;
+  border: 1px solid #6F7CA0;
   border-radius: 4px;
 
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
   line-height: 22px;
-  color: #3961FF;
+  color: #6F7CA0;
 
 }
 
 .secondaryButton:hover {
-  border: 1px solid #0000BF;
-  color: #0000BF;
+  border: 1px solid #4b536b;
+  color: #4b536b;
 }
 
 .secondaryButton:active {
-  border: 1px solid #162251;
-  color: #162251;
+  border: 1px solid #2d334d;
+  color: #2d334d;
 }
 
 .secondaryButton:disabled {
-  border: 1px solid #6F7CA0;
-  color: #6F7CA0;
+  border: 1px solid #B7BDD0;
+  color: #B7BDD0;
 }
 
 
@@ -271,7 +290,7 @@ select {
 textarea {
   box-sizing: border-box;
   width: 100%;
-  height: 72px;
+  min-height: 72px;
   padding: 5px 10px;
 
   resize: none;
@@ -362,7 +381,7 @@ input[type="search"] {
 
   line-height: 20px;
 
-  color: #2D334D;
+  /*color: #2D334D;*/
 }
 
 .typography-body1 {

@@ -12,6 +12,7 @@
     box-sizing: border-box;
     width: 600px;
     height: fit-content;
+    max-height: 90vh;
     padding: 30px;
     margin: auto;
 
@@ -116,9 +117,9 @@
     align-items: center;
     gap: 20px;
 
-    width: calc(100vw - 70px);
+    width: 100%;
     height: calc(100vh - 200px);
-    padding: 0 25px 30px 0;
+    padding: 0 25px 30px 30px;
 }
 
 .tab {
@@ -197,3 +198,7 @@
 .tableHeader {
     text-align: start;
 }
+
+/*.tableHeader:last-child {*/
+/*    text-align: center;*/
+/*}*/

@@ -50,7 +50,7 @@ export default function Index({}) {
             }}>
 
                 <div className={styles.gridNav}>
-                    <Link href={"/algorithms"}>
+                    <Link href={{ pathname: "/algorithms", query: query }}>
                         <div className={styles.gridNavItem}>{t('algorithms_and_determinants')}</div>
                     </Link>
                     <div className={styles.gridNavItem}>{t('algorithms_compare')}</div>
@@ -93,7 +93,7 @@ export default function Index({}) {
 
 
                 <div className="dropdown dropup" style={{position: "absolute", bottom: "5px", left: "4px"}}>
-                    <img role="button" src={router.locale === 'en' ? "/local-uk.svg" : "/local-ru.svg"} id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"/>
+                    <img role="button" src={t('language_icon')} id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"/>
                     <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                         <LanguageSwitcher lang="ru">
                             <li className="dropdown-item" style={{display: "flex", gap: "10px", alignItems: "center"}}>

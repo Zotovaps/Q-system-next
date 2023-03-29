@@ -21,8 +21,8 @@ const NavigationTreeItemStyled = styled.div`
   cursor: pointer;
 
   &:hover {
-    background: ${props => props.isFolder ? "#2D334D" : "#f7f8fa"};
-    border: 1px solid ${props => props.isFolder ? "#2D334D" : "#ECEDF4"};
+    background: ${props => props.isFolder ? "#6F7CA0" : "#f7f8fa"};
+    border: 1px solid ${props => props.isFolder ? "#6F7CA0" : "#ECEDF4"};
     color: ${props => props.isFolder ? "#FFFFFF" : "#2D334D"};
   }
 

@@ -1,5 +1,7 @@
 {
+    "current_language": "ru",
     "title": "Добро пожаловать",
+    "language_icon": "/local-ru.svg",
     "algorithms_and_determinants": "Алгоритмы и их Q-детерминанты",
     "algorithms_compare": "Сравнение алгоритмов",
     "approximation_service": "Сервис аппроксимации",
@@ -7,5 +9,12 @@
     "publications": "Публикации",
     "log_in": "Войти в систему",
     "log_out": "Выйти из системы",
-    "management": "Управление"
+    "management": "Управление",
+    "list_tab": "Список",
+    "hierarchy_tab": "Иерархия",
+    "name": "Название",
+    "description": "Описание",
+    "search": "Поиск...",
+    "approximation": "Аппроксимация",
+    "determinants": "Q-детрминанты"
 }

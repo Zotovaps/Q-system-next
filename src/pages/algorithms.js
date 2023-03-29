@@ -3,15 +3,19 @@ import styles from '@/styles/Algorithms.module.css'
 import {useState} from "react";
 import {useFormInput} from "@/utils/hooks";
 import NavigationTree from "@/components/NavigationTree";
+import {useLanguageQuery, useTranslation} from "next-export-i18n";
 
 const Algorithms = ({algorithms, folders}) => {
+    const {t, i18n} = useTranslation();
+    const [query] = useLanguageQuery();
+
     const [tabIndex, setTabIndex] = useState(0)
     const searchInput = useFormInput('')
+
 
     return (
         <>
             <div className={styles.algorithmsPage}>
-
 
 
                 <div style={{
@@ -23,30 +27,30 @@ const Algorithms = ({algorithms, folders}) => {
                 }}>
                     <div className={styles.tabs}>
                         <div className={tabIndex === 0 ? styles.checked : styles.tab} onClick={() => setTabIndex(0)}>
-                            <span className="typography-subtitle1">Algorithms</span>
+                            <span className="typography-subtitle1">{t('list_tab')}</span>
                         </div>
                         <div className={tabIndex === 1 ? styles.checked : styles.tab} onClick={() => setTabIndex(1)}>
-                            <span className="typography-subtitle1">Folders</span>
+                            <span className="typography-subtitle1">{t('hierarchy_tab')}</span>
                         </div>
                     </div>
 
                     {tabIndex === 0 && <input value={searchInput.value} onChange={searchInput.onChange} type={"search"}
-                           placeholder={"Search..."} style={{width: "300px"}}/>}
+                                              placeholder={t('search')} style={{width: "300px"}}/>}
                 </div>
 
                 <>
                     {tabIndex === 0 && <div className={styles.algoList}>
                         <table>
                             <thead>
-                            <tr style={{height: "30px"}}>
-                                <th className={styles.tableHeader}>
-                                    <span className="typography-subtitle2" style={{color: "#6F7CA0"}}>Name</span>
-                                </th>
-                                <th className={styles.tableHeader}>
-                                    <span className="typography-subtitle2" style={{color: "#6F7CA0"}}>Description</span>
-                                </th>
-                                <th className={styles.tableHeader}/>
-                            </tr>
+                                <tr style={{height: "30px"}}>
+                                    <th>
+                                        <span className="typography-subtitle2">{t('name')}</span>
+                                    </th>
+                                    <th className={styles.tableHeader}>
+                                        <span className="typography-subtitle2">{t('description')}</span>
+                                    </th>
+                                    <th className={styles.tableHeader}/>
+                                </tr>
                             </thead>
 
                             <tbody>
@@ -60,7 +64,8 @@ const Algorithms = ({algorithms, folders}) => {
 
                                         <tr key={index} style={{height: "40px"}}>
                                             <td style={{padding: "5px 10px"}}>
-                                                <span className="typography-body2">{item.nameEn}</span>
+                                                <span
+                                                    className="typography-body2">{true ? item.nameEn : item.nameRu}</span>
                                             </td>
                                             <td style={{padding: "5px 10px"}}>
                                                 <span className="typography-body2">
@@ -84,7 +89,14 @@ const Algorithms = ({algorithms, folders}) => {
                     </div>}
 
                     {tabIndex === 1 && <div className={styles.algoList}>
-                        <div style={{alignItems: "flex-end", display: "flex", gap: "10px", flexDirection: "column", maxWidth: "1125px", width: "inherit"}}>
+                        <div style={{
+                            alignItems: "flex-end",
+                            display: "flex",
+                            gap: "10px",
+                            flexDirection: "column",
+                            maxWidth: "1125px",
+                            width: "inherit"
+                        }}>
                             {folders && folders
                                 .filter(item => !item.parentId)
                                 .map((item, index) => {

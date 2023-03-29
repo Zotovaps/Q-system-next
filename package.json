@@ -14,14 +14,23 @@
     "bootstrap": "^5.2.3",
     "eslint": "8.34.0",
     "eslint-config-next": "13.2.1",
+    "katex": "^0.16.4",
+    "mathjax": "^3.2.2",
+    "mathjs": "^11.7.0",
+    "mathlive": "^0.90.7",
     "next": "13.2.1",
     "next-export-i18n": "^2.1.0",
     "next-i18next": "^13.2.2",
     "next-language-detector": "^1.0.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-katex": "^3.0.1",
+    "react-latex-next": "^2.2.0",
     "reactstrap": "^9.1.6",
     "styled-components": "^5.3.9",
+    "@cortex-js/compute-engine": "^0.12.2",
     "uuid": "^9.0.0"
+  },
+  "devDependencies": {
   }
 }
