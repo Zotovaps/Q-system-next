@@ -145,7 +145,7 @@ export default function Algorithm({algorithm, processors, ticks, determinants}) 
                                             Algorithm width: {width}
                                         </h5>
                                         <div className="collapse" id="collapseWidth">
-                                            <InlineMath>{algorithm.dataWidth.replace('cdot', '\\cdot')}</InlineMath>
+                                            <InlineMath>{algorithm.dataWidth.replaceAll('cdot', '\\cdot').replaceAll('*', ' \\cdot ')}</InlineMath>
                                         </div>
                                     </div>
                                 </div>
@@ -160,7 +160,7 @@ export default function Algorithm({algorithm, processors, ticks, determinants}) 
                                             Algorithm height: {height}
                                         </h5>
                                         <div className="collapse" id="collapseHeight">
-                                            <InlineMath>{algorithm.dataHeight.replace('cdot', '\\cdot')}</InlineMath>
+                                            <InlineMath>{algorithm.dataHeight.replaceAll('cdot', '\\cdot').replaceAll('*', ' \\cdot ')}</InlineMath>
                                         </div>
                                     </div>
                                 </div>

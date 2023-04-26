@@ -187,12 +187,14 @@ export default function Admin() {
             body: raw,
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': localStorage.getItem("accessToken"),
             },
         };
 
         fetch("https://d5d603o45jf9c91p4q4q.apigw.yandexcloud.net/algorithm", requestOptions)
             .then(response => response.json())
             .then(result => {
+                if (result.message === "Unauthorized") return
                 selectedAlgorithm ? setAlgorithms(algorithms.map(a => {
                     if (a.algorithmId === result.algorithmId) {
                         a.folderId = result.folderId
@@ -221,6 +223,7 @@ export default function Admin() {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem("accessToken"),
                 },
             };
 
@@ -228,7 +231,8 @@ export default function Admin() {
             fetch(`https://d5d603o45jf9c91p4q4q.apigw.yandexcloud.net/algorithm/${item.algorithmId}`, requestOptions)
                 .then(response => response.json())
                 .then(result => {
-                    // handleClose()
+                    if (result.message === "Unauthorized") return
+
                     setAlgorithms(algorithms.filter(i => i.algorithmId !== item.algorithmId));
                     console.log(result)
                 })
@@ -276,19 +280,22 @@ export default function Admin() {
             body: raw,
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': localStorage.getItem("accessToken"),
             },
+            redirect: 'follow'
         };
 
         fetch("https://d5d603o45jf9c91p4q4q.apigw.yandexcloud.net/folder", requestOptions)
             .then(response => response.json())
             .then(result => {
+                if (result.message === "Unauthorized") return
+
                 selectedFolder ? setFolders(folders.map(f => {
                     if (f.folderId === result.folderId) {
                         f.nameRu = result.nameRu
                         f.nameEn = result.nameEn
                         f.parentId = result.parentId
                     }
-
                     return f
                 })) : setFolders(oldArray => [result, ...oldArray]);
 
@@ -306,12 +313,15 @@ export default function Admin() {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem("accessToken"),
                 },
             };
 
             fetch(`https://d5d603o45jf9c91p4q4q.apigw.yandexcloud.net/folder/${item.folderId}`, requestOptions)
                 .then(response => response.json())
                 .then(result => {
+                    if (result.message === "Unauthorized") return
+
                     setFolders(folders.filter(i => i.folderId !== item.folderId));
                     console.log(result)
                 })
@@ -571,7 +581,7 @@ export default function Admin() {
 
         <div style={{
             boxSizing: "border-box",
-            padding: "30px 10px 0 10px",
+            padding: "10px",
             width: "100%",
             height: "100vh",
             display: "flex",
@@ -581,15 +591,14 @@ export default function Admin() {
             background: "rgb(250, 251, 255)"
         }}>
 
-            <Link href={"/"}>
-                <img src={"/back.svg"}
-                     style={{
-                         width: "40px",
-                         transform: "rotate(180deg)",
-                         position: "absolute",
-                         left: "30px",
-                         cursor: "pointer"
-                     }}/>
+            <Link href={"/"} style={{
+                width: "40px",
+                transform: "rotate(180deg)",
+                position: "absolute",
+                left: "30px",
+                cursor: "pointer"
+            }}>
+                <img src={"/back.svg"}/>
             </Link>
 
 
@@ -614,11 +623,16 @@ export default function Admin() {
                         </div>
                     </div>
 
-                    <input value={searchInput.value} onChange={searchInput.onChange} type={"search"}
-                           placeholder={"Search..."} style={{width: "300px"}}/>
+                    <div>
+                        <input value={searchInput.value} onChange={searchInput.onChange} type={"search"}
+                               placeholder={"Search..."} style={{width: "300px"}}/>
+
+                        <button onClick={OnBuildHandle}>Собрать</button>
+                    </div>
+
                 </div>
 
-                <div style={{width: "100%"}}>
+                <div style={{width: "100%", flex: "1"}}>
                     {tabIndex === 0 && <div className={styles.tabsBody}>
 
                         <table>
@@ -1024,7 +1038,7 @@ export default function Admin() {
                 </div>
 
 
-                <button onClick={OnBuildHandle}>Собрать</button>
+
 
                 {loadind && <div style={{
                     position: "absolute",

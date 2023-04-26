@@ -22,19 +22,44 @@ export default function Index({}) {
     const handleShow = () => setShow(true);
 
     const handleAuth = () => {
-        if (login.value === process.env.login && password.value === process.env.password) {
-            sessionStorage && sessionStorage.setItem("accessToken", "123");
-            setShow(false);
-        }
+        let raw = JSON.stringify({
+            login: login.value,
+            password: password.value
+        });
+
+        let requestOptions = {
+            method: 'PUT',
+            body: raw,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+
+        fetch("https://d5d603o45jf9c91p4q4q.apigw.yandexcloud.net/http/basic/authorize", requestOptions)
+            .then(response => response.text())
+            .then(result => {
+                if (result !== 'false') {
+                    localStorage && localStorage.setItem("accessToken", "Bearer " + result);
+                    setShow(false);
+                }
+                //sessionStorage && sessionStorage.setItem("accessToken", "123");
+                //console.log(result)
+            })
+            .catch(error => console.log('error', error));
+
+        // if (login.value === process.env.login && password.value === process.env.password) {
+        //     sessionStorage && sessionStorage.setItem("accessToken", "123");
+        //     setShow(false);
+        // }
     }
 
     const handleExit = () => {
-        sessionStorage && sessionStorage.removeItem("accessToken");
+        localStorage && localStorage.removeItem("accessToken");
         window.location.reload();
     }
 
     useEffect(() => {
-        setToken(sessionStorage.getItem("accessToken"))
+        setToken(localStorage.getItem("accessToken"))
     }, [show])
 
     return (
