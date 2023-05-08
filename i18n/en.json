@@ -1,20 +1,50 @@
 {
   "current_language": "en",
-  "title": "Welcome to ",
   "language_icon": "/local-uk.svg",
-  "algorithms_and_determinants": "Algorithms and Q-determinants",
-  "algorithms_compare": "Compare algorithms",
-  "approximation_service": "Approximation service",
-  "documentation": "Documentation",
-  "publications": "Publications",
+  "pages":{
+    "main" : "Main page",
+    "algorithms_and_determinants": "Algorithms and Q-determinants",
+    "algorithms_compare": "Compare algorithms",
+    "approximation_service": "Approximation service",
+    "documentation": "Documentation",
+    "publications": "Publications",
+    "management": "Management"
+  },
+  "algorithms": "Algorithms",
+  "folders": "Folders",
+  "determinants": "Q-determinants",
+  "approximation": "Approximation",
+  "list": "List",
+  "hierarchy": "Hierarchy",
+  "button": {
+    "cancel": "Cancel",
+    "login": "Log in",
+    "save": "Save",
+    "edit": "Edit",
+    "build": "Build",
+    "approximate": "Approximate",
+    "upload": "Upload",
+    "loading": "Loading..."
+
+  },
+  "table": {
+    "name": "Name",
+    "name_en": "Name (EN)",
+    "name_ru": "Name (RU)",
+    "description": "Description",
+    "description_en": "Description (EN)",
+    "description_ru": "Description (RU)",
+    "folder": "Parent Folder",
+    "dimensions": "Dimensions",
+    "iterations": "Iterations",
+    "processors": "Processors",
+    "ticks": "Ticks"
+  },
+  "algo_width": "Algorithm width",
+  "algo_height": "Algorithm height",
   "log_in": "Log In",
   "log_out": "Log Out",
-  "management": "Management",
-  "list_tab": "List",
-  "hierarchy_tab": "Hierarchy",
-  "name": "Name",
-  "description": "Description",
   "search": "Search...",
-  "approximation": "Approximation",
-  "determinants": "Q-determinants"
+  "enter_login": "Enter login",
+  "enter_password": "Enter password"
 }

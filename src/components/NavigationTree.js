@@ -1,7 +1,8 @@
-import React, {useState} from "react"
+import React, {useEffect, useState} from "react"
 import styled from "styled-components";
 import NavigationTreeItem from "./NavigationTreeItem";
 import Link from "next/link";
+import {useLanguageQuery, useTranslation} from "next-export-i18n";
 
 const AlgorithmNavigationStyled = styled.div`
   display: flex;
@@ -35,9 +36,20 @@ const AlgorithmNavigationStyled = styled.div`
 
 
 const NavigationTree = (props) => {
+    const {t, i18n} = useTranslation();
+    const [query] = useLanguageQuery();
+    const [language, setLanguage] = useState('en');
+
     const [show, setShow] = useState(false)
     const [subFolders, setSubFolders] = useState(undefined)
     const [algorithms, setAlgorithms] = useState(undefined)
+
+
+    useEffect(() => {
+        if(query){
+            setLanguage(query.lang)
+        }
+    }, [query])
 
     const handleClick = () => {
 
@@ -60,13 +72,13 @@ const NavigationTree = (props) => {
 
     return (
         <>
-            <NavigationTreeItem item={props.item.nameRu} level={props.level} onClick={() => setShow(!show)} isFolder={true}/>
+            <NavigationTreeItem item={language === 'en' ? props.item.nameEn : props.item.nameRu} level={props.level} onClick={() => setShow(!show)} isFolder={true}/>
 
             {show && props.algorithms && props.algorithms.filter(i => i.folderId === props.item.folderId).map((item, index) => {
                 return (
-                    <Link key={index} href={`/algorithms/${item.algorithmId}`} style={{width: "100%", display: "flex", flexDirection: "column", alignItems: "flex-end"}}>
+                    <Link key={index} href={{pathname: `/algorithms/${item.algorithmId}`, query: query}} style={{width: "100%", display: "flex", flexDirection: "column", alignItems: "flex-end"}}>
                         <NavigationTreeItem
-                                            item={item.nameRu}
+                                            item={language === 'en' ? item.nameEn : item.nameRu}
                                             isFolder={false}
                                             level={props.level + 1}
                         />

@@ -1,34 +1,21 @@
-import {useRouter} from "next/router";
 import styled from "styled-components";
 import Link from "next/link";
 import 'katex/dist/katex.min.css';
-import {InlineMath, BlockMath} from 'react-katex';
-import {evaluate} from 'mathjs'
-import {useEffect, useRef, useState} from "react";
+import {InlineMath} from 'react-katex';
+import {useEffect, useState} from "react";
 import styles from "@/styles/Admin.module.css";
-import {useLanguageQuery, useTranslation} from "next-export-i18n";
-import NavigationTree from "@/components/NavigationTree";
+import {LanguageSwitcher, useLanguageQuery, useTranslation} from "next-export-i18n";
 
 const ce = require('@cortex-js/compute-engine');
 
 
-const PageStyled = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-
-  width: 100vw;
-  height: 100vh;
-  padding: 30px 10px 0 60px;
-
-  background: rgb(247, 248, 252);
-`
-
-
 export default function Algorithm({algorithm, processors, ticks, determinants}) {
-    const [tabIndex, setTabIndex] = useState(0);
     const {t, i18n} = useTranslation();
     const [query] = useLanguageQuery();
+    const [language, setLanguage] = useState('en');
+
+    const [tabIndex, setTabIndex] = useState(0);
+
 
     const [variables, setVariables] = useState([]);
     const [coef, setCoef] = useState(undefined);
@@ -49,6 +36,12 @@ export default function Algorithm({algorithm, processors, ticks, determinants}) 
             setVariables(Array(dimensionsCount + iterationsCount).fill(0))
         }
     }, [])
+
+    useEffect(() => {
+        if (query) {
+            setLanguage(query.lang)
+        }
+    }, [query])
 
     useEffect(() => {
         if (variables.length > 0) {
@@ -74,131 +67,106 @@ export default function Algorithm({algorithm, processors, ticks, determinants}) 
             }
         })
 
-
         return JSON.parse(tmp)
     }
 
     return (
-        <PageStyled>
-            <nav aria-label="breadcrumb">
+        <div className="page-template">
+            <nav className="breadcrumb-container" aria-label="breadcrumb">
                 <ol className="breadcrumb">
-                    <li className="breadcrumb-item"><Link href="/">Home</Link></li>
-                    <li className="breadcrumb-item"><Link href="/algorithms">Algorithms</Link></li>
-                    <li className="breadcrumb-item active" aria-current="page">{algorithm.nameRu}</li>
+                    <li className="breadcrumb-item"><Link href={{pathname: "/", query: query}}>{t('pages.main')}</Link>
+                    </li>
+                    <li className="breadcrumb-item"><Link
+                        href={{pathname: "/algorithms", query: {lang: language}}}>{t('algorithms')}</Link></li>
+                    <li className="breadcrumb-item active"
+                        aria-current="page">{language === 'en' ? algorithm.nameEn : algorithm.nameRu}</li>
                 </ol>
             </nav>
 
 
             {algorithm && processors && ticks && determinants &&
-            <div style={{
-                padding: "0 45px 30px 0",
-                display: "flex",
-                flexDirection: "column",
-                gap: "10px"
-            }}>
+            <>
 
-                <div className={styles.tabs}>
-                    <div className={tabIndex === 0 ? styles.checked : styles.tab} onClick={() => setTabIndex(0)}>
-                        <span className="typography-subtitle1">{t('approximation')}</span>
-                    </div>
-                    <div className={tabIndex === 1 ? styles.checked : styles.tab} onClick={() => setTabIndex(1)}>
-                        <span className="typography-subtitle1">{t('determinants')}</span>
+                <div className="tabs-header">
+                    <div className={styles.tabs}>
+                        <div className={tabIndex === 0 ? styles.checked : styles.tab} onClick={() => setTabIndex(0)}>
+                            <span className="typography-subtitle1">{t('approximation')}</span>
+                        </div>
+                        <div className={tabIndex === 1 ? styles.checked : styles.tab} onClick={() => setTabIndex(1)}>
+                            <span className="typography-subtitle1">{t('determinants')}</span>
+                        </div>
                     </div>
                 </div>
 
-                <>
-                    {tabIndex === 0 && <div>
+                <div className="tabs-body">
+                    {tabIndex === 0 && <div className="tabs-body-content">
+
+                        {variables && variables.length > 0 && variables.map((item, index) => {
+                            return (
+                                <input key={index} type="number" value={variables[index]} onChange={(e) => {
+                                    setVariables(variables.map((v, i) => {
+                                        if (index === i) return e.target.value;
+                                        return v;
+                                    }))
+                                }} style={{maxWidth: "1500px"}}/>
+                            )
+                        })}
+
                         <div style={{
                             display: "flex",
-                            flexDirection: "column",
-                            gap: "10px",
-                            overflow: "hidden auto",
-                            height: "calc(100vh - 115px)",
-                            padding: "0 0 30px 0"
+                            flexDirection: "row",
+                            flexWrap: "wrap",
+                            gap: "20px",
+                            justifyContent: "space-between",
+                            width: "100%",
+                            maxWidth: "1500px"
                         }}>
-                            {variables && variables.length > 0 && variables.map((item, index) => {
-                                return (
-                                    <input key={index} type="number" value={variables[index]} onChange={(e) => {
-                                        setVariables(variables.map((v, i) => {
-                                            if (index === i) return e.target.value;
-                                            return v;
-                                        }))
-                                    }}/>
-                                )
-                            })}
 
-                            <div style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                flexWrap: "wrap",
-                                gap: "20px",
-                                justifyContent: "space-between"
-                            }}>
+                            <div className="card" style={{width: "calc(50% - 20px)", minWidth: "700px"}}>
+                                {processors.data.img && <img src={processors.data.img} className="card-img-top"
+                                                             style={{width: "100%", maxWidth: "700px"}} alt="..."/>}
 
-                                <div className="card" style={{width: "calc(50% - 20px)", minWidth: "700px"}}>
-                                    {processors.data.img && <img src={processors.data.img} className="card-img-top"
-                                         style={{width: "100%", maxWidth: "700px"}} alt="..."/>}
-
-                                    <div className="card-body">
-                                        <h5 className="card-title" data-bs-toggle="collapse" href="#collapseWidth"
-                                            role="button" aria-expanded="false" aria-controls="collapseWidth">
-                                            Algorithm width: {width}
-                                        </h5>
-                                        <div className="collapse" id="collapseWidth">
-                                            <InlineMath>{algorithm.dataWidth.replaceAll('cdot', '\\cdot').replaceAll('*', ' \\cdot ')}</InlineMath>
-                                        </div>
+                                <div className="card-body">
+                                    <h5 className="card-title" data-bs-toggle="collapse" href="#collapseWidth"
+                                        role="button" aria-expanded="false" aria-controls="collapseWidth">
+                                        {t('algo_width')}: {width}
+                                    </h5>
+                                    <div className="collapse" id="collapseWidth">
+                                        <InlineMath>{algorithm.dataWidth.replaceAll('cdot', '\\cdot').replaceAll('*', ' \\cdot ')}</InlineMath>
                                     </div>
                                 </div>
-
-                                <div className="card" style={{width: "calc(50% - 20px)", minWidth: "700px"}}>
-                                    {ticks.data.img && <img src={ticks.data.img} className="card-img-top"
-                                         style={{width: "100%", maxWidth: "700px"}} alt="..."/>}
-
-                                    <div className="card-body">
-                                        <h5 className="card-title" data-bs-toggle="collapse" href="#collapseHeight"
-                                            role="button" aria-expanded="false" aria-controls="collapseHeight">
-                                            Algorithm height: {height}
-                                        </h5>
-                                        <div className="collapse" id="collapseHeight">
-                                            <InlineMath>{algorithm.dataHeight.replaceAll('cdot', '\\cdot').replaceAll('*', ' \\cdot ')}</InlineMath>
-                                        </div>
-                                    </div>
-                                </div>
-
                             </div>
+
+                            <div className="card" style={{width: "calc(50% - 20px)", minWidth: "700px"}}>
+                                {ticks.data.img && <img src={ticks.data.img} className="card-img-top"
+                                                        style={{width: "100%", maxWidth: "700px"}} alt="..."/>}
+
+                                <div className="card-body">
+                                    <h5 className="card-title" data-bs-toggle="collapse" href="#collapseHeight"
+                                        role="button" aria-expanded="false" aria-controls="collapseHeight">
+                                        {t('algo_height')}: {height}
+                                    </h5>
+                                    <div className="collapse" id="collapseHeight">
+                                        <InlineMath>{algorithm.dataHeight.replaceAll('cdot', '\\cdot').replaceAll('*', ' \\cdot ')}</InlineMath>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
 
                     </div>}
 
-                    {tabIndex === 1 && <div style={{
-                        alignItems: "flex-end",
-                        display: "flex",
-                        gap: "10px",
-                        flexDirection: "column",
-                        maxWidth: "1125px",
-                        width: "inherit",
-                        overflow: "hidden auto",
-                        height: "calc(100vh - 115px)", padding: "0 0 30px 0"
-                    }}>
+                    {tabIndex === 1 && <div className="tabs-body-content">
                         {determinants.length > 0 && <table>
                             <thead>
-                            <tr style={{height: "30px"}}>
-                                <th className={styles.tableHeader}>
-                                    <span className="typography-subtitle2">Dimensions</span>
-                                </th>
-                                {determinants[0].iterations && <th className={styles.tableHeader}>
-                                    <span className="typography-subtitle2">Iterations</span>
-                                </th>}
+                            <tr>
+                                <th className="typography-subtitle2">{t('table.dimensions')}</th>
+                                {determinants[0].iterations &&
+                                <th className="typography-subtitle2">{t('table.iterations')}</th>}
 
-                                <th className={styles.tableHeader}>
-                                    <span className="typography-subtitle2">Processors</span>
-                                </th>
-                                <th className={styles.tableHeader}>
-                                    <span className="typography-subtitle2">Ticks</span>
-                                </th>
-                                <th className={styles.tableHeader} style={{width: "50px"}}>
-
-                                </th>
+                                <th className="typography-subtitle2">{t('table.processors')}</th>
+                                <th className="typography-subtitle2">{t('table.ticks')}</th>
+                                <th style={{width: "30px"}}></th>
                             </tr>
                             </thead>
 
@@ -209,20 +177,23 @@ export default function Algorithm({algorithm, processors, ticks, determinants}) 
                                         <td style={{padding: "5px 10px"}}>
                                             <span className="typography-body2">{item.dimensions}</span>
                                         </td>
+
                                         {item.iterations &&
                                         <td style={{padding: "5px 10px"}}>
                                             <span className="typography-body2">{item.iterations}</span>
                                         </td>
                                         }
+
                                         <td style={{padding: "5px 10px"}}>
                                             <span className="typography-body2">{item.processors}</span>
                                         </td>
+
                                         <td style={{padding: "5px 10px"}}>
                                             <span className="typography-body2">{item.ticks}</span>
                                         </td>
 
                                         <td style={{padding: "0 5px"}}>
-                                            <img src={"/Export.svg"}/>
+                                            <img width={"16px"} src={"/export.svg"}/>
                                         </td>
                                     </tr>
                                 )
@@ -230,11 +201,30 @@ export default function Algorithm({algorithm, processors, ticks, determinants}) 
                             </tbody>
                         </table>}
                     </div>}
-                </>
+                </div>
+            </>}
 
+            <div className="language-group dropup">
+                <img role="button" src={t('language_icon')} id="dropdownLanguage" data-bs-toggle="dropdown"
+                     aria-expanded="false"/>
 
-            </div>}
-        </PageStyled>
+                <ul className="dropdown-menu" aria-labelledby="dropdownLanguage">
+                    <LanguageSwitcher lang="ru">
+                        <li className="dropdown-item" style={{display: "flex", gap: "10px", alignItems: "center"}}>
+                            <img src={"/local-ru.svg"}/>
+                            <span className="typography-subtitle2">Русский</span>
+                        </li>
+                    </LanguageSwitcher>
+
+                    <LanguageSwitcher lang="en">
+                        <li className="dropdown-item" style={{display: "flex", gap: "10px", alignItems: "center"}}>
+                            <img src={"/local-uk.svg"}/>
+                            <span className="typography-subtitle2">English</span>
+                        </li>
+                    </LanguageSwitcher>
+                </ul>
+            </div>
+        </div>
     )
 }
 

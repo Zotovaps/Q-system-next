@@ -1,93 +1,17 @@
 import {useEffect, useState} from "react";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import {Modal, Spinner, Table} from "reactstrap";
+// import 'bootstrap/dist/css/bootstrap.min.css';
+import {Spinner} from "reactstrap";
 import {useFormInput} from "@/utils/hooks";
 import styles from '@/styles/Admin.module.css';
 import {v4 as uuidv4} from 'uuid';
 import Link from "next/link";
-import styled from "styled-components";
+import {LanguageSwitcher, useLanguageQuery, useTranslation} from "next-export-i18n";
 
-
-const FilePicker = styled.div`
-  display: flex;
-  align-items: center;
-
-  position: relative;
-  width: 100%;
-  height: 36px;
-
-  img {
-    content: url("/Upload.svg");
-  }
-
-  input {
-
-    opacity: 0;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
-`
-
-const Loader = styled.span`
-
-  width: 175px;
-  height: 80px;
-  display: block;
-  margin: auto;
-  background-image: radial-gradient(circle 25px at 25px 25px, #FFF 100%, transparent 0), radial-gradient(circle 50px at 50px 50px, #FFF 100%, transparent 0), radial-gradient(circle 25px at 25px 25px, #FFF 100%, transparent 0), linear-gradient(#FFF 50px, transparent 0);
-  background-size: 50px 50px, 100px 76px, 50px 50px, 120px 40px;
-  background-position: 0px 30px, 37px 0px, 122px 30px, 25px 40px;
-  background-repeat: no-repeat;
-  position: relative;
-  box-sizing: border-box;
-
-  &::after {
-    content: '';
-    left: 50%;
-    bottom: 0;
-    transform: translate(-50%, 0);
-    position: absolute;
-    border: 15px solid transparent;
-    border-top-color: #FF3D00;
-    box-sizing: border-box;
-    animation: fadePush 1s linear infinite;
-  }
-
-  &::before {
-    content: '';
-    left: 50%;
-    bottom: 30px;
-    transform: translate(-50%, 0);
-    position: absolute;
-    width: 15px;
-    height: 15px;
-    background: #FF3D00;
-    box-sizing: border-box;
-    animation: fadePush 1s linear infinite;
-  }
-
-  @keyframes fadePush {
-    0% {
-      transform: translate(-50%, -15px);
-      opacity: 0;
-    }
-    50% {
-      transform: translate(-50%, 0px);
-      opacity: 1;
-    }
-    100% {
-      transform: translate(-50%, 15px);
-      opacity: 0;
-    }
-  }
-`
 
 export default function Admin() {
+    const {t, i18n} = useTranslation();
+    const [query] = useLanguageQuery();
+
     const [loadind, setLoading] = useState(false);
     const [algorithms, setAlgorithms] = useState(undefined)
     const [determinants, setDeterminants] = useState(undefined)
@@ -104,7 +28,6 @@ export default function Admin() {
 
 
     const getAlgorithms = () => {
-
         fetch("https://d5d603o45jf9c91p4q4q.apigw.yandexcloud.net/algorithm", {method: "GET"})
             .then(response => response.json())
             .then(result => {
@@ -114,7 +37,6 @@ export default function Admin() {
     }
 
     const getDeterminants = () => {
-
         fetch("https://d5d603o45jf9c91p4q4q.apigw.yandexcloud.net/determinant", {method: "GET"})
             .then(response => response.json())
             .then(result => {
@@ -124,7 +46,6 @@ export default function Admin() {
     }
 
     const getFolders = () => {
-
         fetch("https://d5d603o45jf9c91p4q4q.apigw.yandexcloud.net/folder", {method: "GET"})
             .then(response => response.json())
             .then(result => {
@@ -152,7 +73,6 @@ export default function Admin() {
         descriptionAlgo.ru.setValue('');
         approximationAlgo.width.setValue('');
         approximationAlgo.height.setValue('');
-
     }
 
     const handleAlgoShow = (e, item = undefined) => {
@@ -194,7 +114,12 @@ export default function Admin() {
         fetch("https://d5d603o45jf9c91p4q4q.apigw.yandexcloud.net/algorithm", requestOptions)
             .then(response => response.json())
             .then(result => {
-                if (result.message === "Unauthorized") return
+                if (result.message === "Unauthorized") {
+                    localStorage && localStorage.removeItem("accessToken");
+                    window.location.replace("/");
+                    return
+                }
+
                 selectedAlgorithm ? setAlgorithms(algorithms.map(a => {
                     if (a.algorithmId === result.algorithmId) {
                         a.folderId = result.folderId
@@ -227,18 +152,20 @@ export default function Admin() {
                 },
             };
 
-
             fetch(`https://d5d603o45jf9c91p4q4q.apigw.yandexcloud.net/algorithm/${item.algorithmId}`, requestOptions)
                 .then(response => response.json())
                 .then(result => {
-                    if (result.message === "Unauthorized") return
+                    if (result.message === "Unauthorized") {
+                        localStorage && localStorage.removeItem("accessToken");
+                        window.location.replace("/");
+                        return
+                    }
 
                     setAlgorithms(algorithms.filter(i => i.algorithmId !== item.algorithmId));
                     console.log(result)
                 })
                 .catch(error => console.log('error', error));
         }
-
     }
 
 
@@ -288,7 +215,11 @@ export default function Admin() {
         fetch("https://d5d603o45jf9c91p4q4q.apigw.yandexcloud.net/folder", requestOptions)
             .then(response => response.json())
             .then(result => {
-                if (result.message === "Unauthorized") return
+                if (result.message === "Unauthorized") {
+                    localStorage && localStorage.removeItem("accessToken");
+                    window.location.replace("/");
+                    return
+                }
 
                 selectedFolder ? setFolders(folders.map(f => {
                     if (f.folderId === result.folderId) {
@@ -320,7 +251,11 @@ export default function Admin() {
             fetch(`https://d5d603o45jf9c91p4q4q.apigw.yandexcloud.net/folder/${item.folderId}`, requestOptions)
                 .then(response => response.json())
                 .then(result => {
-                    if (result.message === "Unauthorized") return
+                    if (result.message === "Unauthorized") {
+                        localStorage && localStorage.removeItem("accessToken");
+                        window.location.replace("/");
+                        return
+                    }
 
                     setFolders(folders.filter(i => i.folderId !== item.folderId));
                     console.log(result)
@@ -334,7 +269,7 @@ export default function Admin() {
     const [algorithmId, setAlgorithmId] = useState(undefined);
     const [showDeterminantModal, setShowDeterminantModal] = useState(false);
     const [showDeterminantEdit, setShowDeterminantEdit] = useState(false);
-    const determinantValue = {dimension: useFormInput(''), iteration: useFormInput('')};
+    const determinantValue = {dimension: useFormInput(''), iteration: useFormInput(''), processors: useFormInput(''), ticks: useFormInput('')};
     const [determinantId, setDeterminantId] = useState(undefined)
 
     const chunkSize = 1024 * 1024 * 2;//its 3MB, increase the number measure in mb
@@ -366,7 +301,7 @@ export default function Admin() {
         let _file = e.target.files[0];
         setFileSize(_file.size)
 
-        const _totalCount = _file.size % chunkSize == 0 ? _file.size / chunkSize : Math.floor(_file.size / chunkSize) + 1; // Total count of chunks will have been upload to finish the file
+        const _totalCount = _file.size % chunkSize === 0 ? _file.size / chunkSize : Math.floor(_file.size / chunkSize) + 1; // Total count of chunks will have been upload to finish the file
         setChunkCount(_totalCount)
 
         setFileToBeUpload(_file)
@@ -379,12 +314,11 @@ export default function Admin() {
         }
     }
 
-
     const fileUpload = () => {
         setCounter(counter + 1);
 
         if (counter <= chunkCount) {
-            var chunk = fileToBeUpload.slice(beginingOfTheChunk, endOfTheChunk);
+            let chunk = fileToBeUpload.slice(beginingOfTheChunk, endOfTheChunk);
             uploadChunk(chunk)
         } else {
             setPrevious("")
@@ -397,6 +331,7 @@ export default function Admin() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem("accessToken"),
                 },
                 body: chunk
             };
@@ -460,16 +395,38 @@ export default function Admin() {
         return response.json(); // returns a promise, which resolves to this data value
     }
 
-    const DownloadDeterminantHandle = () => {
-        var url = 'https://d5duqpi9k7db8o1dj509.apigw.yandexcloud.net/static/upload/11-7.json';
+    const handleDeterminantDownload = (item) => {
+
+        let requestOptions = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+
+        fetch(`https://d5duqpi9k7db8o1dj509.apigw.yandexcloud.net?target=${algorithmId}/${item.determinantId}.json`, requestOptions)
+            .then(response => response.text())
+            .then(result => {
+
+                getJSON(result).then(data => {
+                    download(JSON.stringify(data), `${item.determinantId}.json`, "application/json");
+                }).catch(error => {
+                    console.error(error);
+                });
+
+            })
+            .catch(error => console.log('error', error));
 
 
-        getJSON(url).then(data => {
-            download(JSON.stringify(data), "determinant.json", "application/json");
-        }).catch(error => {
-            console.error(error);
-        });
-
+        // var url = 'https://d5duqpi9k7db8o1dj509.apigw.yandexcloud.net/static/upload/11-7.json';
+        //
+        //
+        // getJSON(url).then(data => {
+        //     download(JSON.stringify(data), "determinant.json", "application/json");
+        // }).catch(error => {
+        //     console.error(error);
+        // });
+        //
 
         // let requestOptions = {
         //     method: 'GET',
@@ -486,35 +443,57 @@ export default function Admin() {
         //     .catch(error => console.log('error', error));
     }
 
-    const handleDeterminantEdit = (item) => {
+    const handleDeterminantShow = (item) => {
         setShowDeterminantEdit(true)
 
         setDeterminantId(item.determinantId)
 
         determinantValue.dimension.setValue(item.dimensions || '');
         determinantValue.iteration.setValue(item.iterations || '');
+        determinantValue.processors.setValue(item.processors);
+        determinantValue.ticks.setValue(item.ticks);
+
     }
 
-    const handleDeterminantCreate = () => {
+    const handleDeterminantEdit = () => {
         let raw = JSON.stringify({
+            algorithmId: algorithmId,
             determinantId: determinantId,
             dimensions: determinantValue.dimension.value,
-            iterations: Number(determinantValue.iteration.value)
+            iterations: Number(determinantValue.iteration.value),
+            processors: determinantValue.processors.value,
+            ticks: determinantValue.ticks.value
         });
-
-        console.log(raw)
 
         let requestOptions = {
             method: 'POST',
             body: raw,
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': localStorage.getItem("accessToken"),
             },
         };
 
         fetch("https://d5d603o45jf9c91p4q4q.apigw.yandexcloud.net/determinant", requestOptions)
             .then(response => response.json())
             .then(result => {
+                if (result.message === "Unauthorized") {
+                    localStorage && localStorage.removeItem("accessToken");
+                    window.location.replace("/");
+                    return
+                }
+
+
+                setDeterminants(determinants.map(d => {
+                    if (d.determinantId === result.determinantId) {
+                        d.dimensions = result.dimensions
+                        d.iterations = result.iterations
+                        d.processors = result.processors
+                        d.ticks = result.ticks
+                    }
+                    return d
+                }))
+
                 setShowDeterminantEdit(false)
                 console.log(result)
             })
@@ -529,12 +508,18 @@ export default function Admin() {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem("accessToken"),
                 },
             };
 
             fetch(`https://d5d603o45jf9c91p4q4q.apigw.yandexcloud.net/determinant/${item.determinantId}`, requestOptions)
                 .then(response => response.json())
                 .then(result => {
+                    if (result.message === "Unauthorized") {
+                        localStorage && localStorage.removeItem("accessToken");
+                        window.location.replace("/");
+                        return
+                    }
                     setDeterminants(determinants.filter(i => i.determinantId !== item.determinantId));
                     console.log(result)
                 })
@@ -579,480 +564,429 @@ export default function Admin() {
 
     return (
 
-        <div style={{
-            boxSizing: "border-box",
-            padding: "10px",
-            width: "100%",
-            height: "100vh",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "20px",
-            background: "rgb(250, 251, 255)"
-        }}>
+        <div className="page-template">
 
-            <Link href={"/"} style={{
-                width: "40px",
-                transform: "rotate(180deg)",
-                position: "absolute",
-                left: "30px",
-                cursor: "pointer"
-            }}>
-                <img src={"/back.svg"}/>
-            </Link>
+            <nav className="breadcrumb-container" aria-label="breadcrumb">
+                <ol className="breadcrumb">
+                    <li className="breadcrumb-item"><Link href={{pathname: "/", query: query}}>{t('pages.main')}</Link>
+                    </li>
+                    <li className="breadcrumb-item active" aria-current="page">{t('pages.management')}</li>
+                </ol>
+            </nav>
 
+            {algorithms && folders && determinants ?
+                <>
+                    <div className="tabs-header">
+                        <div className={styles.tabs}>
+                            <div className={tabIndex === 0 ? styles.checked : styles.tab}
+                                 onClick={() => setTabIndex(0)}>
+                                <span className="typography-subtitle1">{t('algorithms')}</span>
+                            </div>
+                            <div className={tabIndex === 1 ? styles.checked : styles.tab}
+                                 onClick={() => setTabIndex(1)}>
 
-            {algorithms && folders && determinants ? <>
-
-                <div style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    width: "100%",
-                    maxWidth: "1125px"
-                }}>
-                    <div className={styles.tabs}>
-                        <div className={tabIndex === 0 ? styles.checked : styles.tab} onClick={() => setTabIndex(0)}>
-                            <span className="typography-subtitle1">Algorithms</span>
+                                <span className="typography-subtitle1">{t('folders')}</span>
+                            </div>
+                            <div className={tabIndex === 2 ? styles.checked : styles.tab}
+                                 onClick={() => setTabIndex(2)}>
+                                <span className="typography-subtitle1">{t('determinants')}</span>
+                            </div>
                         </div>
-                        <div className={tabIndex === 1 ? styles.checked : styles.tab} onClick={() => setTabIndex(1)}>
 
-                            <span className="typography-subtitle1">Folders</span>
-                        </div>
-                        <div className={tabIndex === 2 ? styles.checked : styles.tab} onClick={() => setTabIndex(2)}>
-                            <span className="typography-subtitle1">Determinants</span>
+                        <div className="management">
+                            <input value={searchInput.value} onChange={searchInput.onChange} type={"search"}
+                                   placeholder={t('search')}/>
+
+                            <button className="secondaryButton" onClick={OnBuildHandle}>{t('button.build')}</button>
                         </div>
                     </div>
 
-                    <div>
-                        <input value={searchInput.value} onChange={searchInput.onChange} type={"search"}
-                               placeholder={"Search..."} style={{width: "300px"}}/>
+                    <div className="tabs-body">
 
-                        <button onClick={OnBuildHandle}>Собрать</button>
-                    </div>
+                        {tabIndex === 0 && <div className="tabs-body-content">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th className={"typography-subtitle2 " + styles.tableHeader}>{t('table.name_ru')}</th>
 
-                </div>
+                                    <th className={"typography-subtitle2 " + styles.tableHeader}>{t('table.description_ru')}</th>
 
-                <div style={{width: "100%", flex: "1"}}>
-                    {tabIndex === 0 && <div className={styles.tabsBody}>
+                                    <th className={"typography-subtitle2 " + styles.tableHeader}>{t('table.name_en')}</th>
 
-                        <table>
-                            <thead>
-                            <tr style={{height: "30px"}}>
-                                <th className={styles.tableHeader}>
-                                    <span className="typography-subtitle2">Name Ru</span>
-                                </th>
+                                    <th className={"typography-subtitle2 " + styles.tableHeader}>{t('table.description_en')}</th>
 
-                                <th className={styles.tableHeader}>
-                                    <span className="typography-subtitle2">Description Ru</span>
-                                </th>
+                                    <th className={"typography-subtitle2 " + styles.tableHeader}>{t('table.folder')}</th>
 
-                                <th className={styles.tableHeader}>
-                                    <span className="typography-subtitle2">Name En</span>
-                                </th>
+                                    <th style={{width: "50px", textAlign: "center", padding: "0"}}>
+                                        <img width={"20px"} height={"20px"} src={"/add.svg"}
+                                             onClick={e => handleAlgoShow(e)}/>
+                                    </th>
+                                </tr>
 
-                                <th className={styles.tableHeader}>
-                                    <span className="typography-subtitle2">Description En</span>
-                                </th>
+                                </thead>
 
-                                <th className={styles.tableHeader}>
-                                    <span className="typography-subtitle2">Folder</span>
-                                </th>
+                                <tbody>
+                                {algorithms
+                                    .filter(item => item.nameEn.toUpperCase().includes(searchInput.value.toUpperCase()) ||
+                                        item.nameRu.toUpperCase().includes(searchInput.value.toUpperCase()) ||
+                                        item.descriptionEn.toUpperCase().includes(searchInput.value.toUpperCase()) ||
+                                        item.descriptionRu.toUpperCase().includes(searchInput.value.toUpperCase()))
+                                    .map((item, index) => {
+                                        const parent = item.folderId && folders.find(folder => folder.folderId === item.folderId) || undefined
 
-                                <th style={{width: "50px"}}>
-                                    <img width={"20px"} height={"20px"} src={"/add.svg"}
-                                         onClick={e => handleAlgoShow(e)}/>
-                                </th>
-                            </tr>
-
-                            </thead>
-
-                            <tbody>
-                            {algorithms
-                                .filter(item => item.nameEn.toUpperCase().includes(searchInput.value.toUpperCase()) ||
-                                    item.nameRu.toUpperCase().includes(searchInput.value.toUpperCase()) ||
-                                    item.descriptionEn.toUpperCase().includes(searchInput.value.toUpperCase()) ||
-                                    item.descriptionRu.toUpperCase().includes(searchInput.value.toUpperCase()))
-                                .map((item, index) => {
-                                    const parent = item.folderId && folders.find(folder => folder.folderId === item.folderId) || undefined
-
-                                    return (
-                                        <tr key={index} style={{height: "40px"}}>
-                                            <td style={{padding: "5px 10px"}}>
+                                        return (
+                                            <tr key={index} style={{height: "40px"}}>
+                                                <td style={{padding: "5px 10px"}}>
                                                 <span className="typography-body2">
                                                     {item.nameRu}
                                                 </span>
-                                            </td>
+                                                </td>
 
-                                            <td style={{padding: "5px 10px"}}>
-                                                <span className="typography-body2">{item.descriptionRu}</span>
-                                            </td>
+                                                <td style={{padding: "5px 10px"}}>
+                                                    <span className="typography-body2">{item.descriptionRu}</span>
+                                                </td>
 
-                                            <td style={{padding: "5px 10px"}}>
-                                                <span className="typography-body2">{item.nameEn}</span>
-                                            </td>
-                                            <td style={{padding: "5px 10px"}}>
-                                                <span className="typography-body2">{item.descriptionEn}</span>
-                                            </td>
+                                                <td style={{padding: "5px 10px"}}>
+                                                    <span className="typography-body2">{item.nameEn}</span>
+                                                </td>
+                                                <td style={{padding: "5px 10px"}}>
+                                                    <span className="typography-body2">{item.descriptionEn}</span>
+                                                </td>
 
-                                            <td style={{padding: "5px 10px"}}>
+                                                <td style={{padding: "5px 10px"}}>
                                                 <span className="typography-body2">
                                                     {parent && `${parent.nameEn} (${parent.nameRu})` || item.parentId}
                                                 </span>
-                                            </td>
+                                                </td>
 
-                                            <td style={{padding: "5px"}}>
-                                                <div style={{
-                                                    display: "flex",
-                                                    flexDirection: "column",
-                                                    alignItems: "center",
-                                                    justifyContent: "center",
-                                                    gap: "10px"
-                                                }}>
-                                                    <img width={"20px"} src={"/edit-icon.svg"}
-                                                         onClick={e => handleAlgoShow(e, item)}/>
+                                                <td style={{padding: "5px"}}>
+                                                    <div style={{
+                                                        display: "flex",
+                                                        flexDirection: "row",
+                                                        alignItems: "center",
+                                                        justifyContent: "center",
+                                                        gap: "5px"
+                                                    }}>
+                                                        <img width={"15px"} src={"/edit-icon.svg"}
+                                                             onClick={e => handleAlgoShow(e, item)}/>
 
-                                                    <img width={"20px"} src={"/delete-icon.svg"}
-                                                         onClick={() => handleAlgoDelete(item)}/>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    )
-                                })}
-                            </tbody>
-                        </table>
-
-
-
-
-                        {/*{algorithms*/}
-                        {/*    .filter(item => item.nameEn.toUpperCase().includes(searchInput.value.toUpperCase()) ||*/}
-                        {/*        item.nameRu.toUpperCase().includes(searchInput.value.toUpperCase()) ||*/}
-                        {/*        item.descriptionEn.toUpperCase().includes(searchInput.value.toUpperCase()) ||*/}
-                        {/*        item.descriptionRu.toUpperCase().includes(searchInput.value.toUpperCase()))*/}
-                        {/*    .map((item, index) => {*/}
-                        {/*        const parent = item.folderId && folders.find(folder => folder.folderId === item.folderId) || undefined*/}
-
-                        {/*        return (*/}
-                        {/*            <div key={index} className={styles.algorithmItem}*/}
-                        {/*                 onDoubleClick={e => handleAlgoShow(e, item)}>*/}
-
-
-                        {/*                {parent && <div style={{display: "flex", gap: "5px"}}>*/}
-                        {/*                    <img src="/folder.svg" alt={"folder icon"}/>*/}
-                        {/*                    <span*/}
-                        {/*                        className="typography-caption1">{parent && `${parent.nameEn} (${parent.nameRu})` || item.folderId}</span>*/}
-                        {/*                </div>}*/}
-
-                        {/*                <img className={styles.xButton}*/}
-                        {/*                    // src="/x.svg"*/}
-                        {/*                     alt={"x icon"}*/}
-                        {/*                     onClick={() => handleAlgoDelete(item)}/>*/}
-
-
-                        {/*                <span className="typography-subtitle2">*/}
-                        {/*                {item.nameEn} <span className="typography-caption1">({item.nameRu})</span>*/}
-                        {/*            </span>*/}
-                        {/*                <span className="typography-body2">*/}
-                        {/*                {item.descriptionEn} <span*/}
-                        {/*                    className="typography-caption1">({item.descriptionRu})</span>*/}
-                        {/*            </span>*/}
-                        {/*            </div>*/}
-                        {/*        )*/}
-                        {/*    })}*/}
-
-
-                        {showAlgorithmModal && <div className={styles.back}>
-                            <div className={styles.modal}>
-                                <input value={nameAlgo.en.value}
-                                       onChange={e => nameAlgo.en.onChange(e)}
-                                       placeholder="Enter Name En"/>
-
-                                <textarea value={descriptionAlgo.en.value}
-                                          onChange={e => descriptionAlgo.en.onChange(e)}
-                                          placeholder="Enter Description En"/>
-
-                                <input value={nameAlgo.ru.value}
-                                       onChange={e => nameAlgo.ru.onChange(e)}
-                                       placeholder="Enter Name Ru"/>
-
-                                <textarea value={descriptionAlgo.ru.value}
-                                          onChange={e => descriptionAlgo.ru.onChange(e)}
-                                          placeholder="Enter Description Ru"/>
-
-                                <select value={folderId} onChange={e => setFolderId(e.target.value)}>
-                                    <option value={undefined}/>
-
-                                    {folders && folders.map((folder, index2) => {
-                                        return (
-                                            <option key={index2} value={folder.folderId}>{folder.nameEn}</option>
+                                                        <img width={"15px"} src={"/delete-icon.svg"}
+                                                             onClick={() => handleAlgoDelete(item)}/>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                         )
                                     })}
-                                </select>
+                                </tbody>
+                            </table>
 
-                                <textarea value={approximationAlgo.width.value}
-                                          onChange={e => approximationAlgo.width.onChange(e)}
-                                          placeholder="Enter approximation width"/>
+                            {showAlgorithmModal && <div className="backdrop">
+                                <div className="modal-container">
+                                    <input value={nameAlgo.en.value}
+                                           onChange={e => nameAlgo.en.onChange(e)}
+                                           placeholder="Enter Name En"/>
 
-                                <textarea value={approximationAlgo.height.value}
-                                          onChange={e => approximationAlgo.height.onChange(e)}
-                                          placeholder="Enter approximation height"/>
+                                    <textarea value={descriptionAlgo.en.value}
+                                              onChange={e => descriptionAlgo.en.onChange(e)}
+                                              placeholder="Enter Description En"/>
 
-                                <div>
-                                    <button className={styles.primaryButton}
-                                            onClick={handleAlgoCreate}
-                                            disabled={nameAlgo.en.value === '' || nameAlgo.ru.value === '' || descriptionAlgo.en.value === '' || descriptionAlgo.ru.value === ''}>Save
-                                    </button>
-                                    <button className={styles.secondaryButton} onClick={handleAlgoClose}>Cancel</button>
+                                    <input value={nameAlgo.ru.value}
+                                           onChange={e => nameAlgo.ru.onChange(e)}
+                                           placeholder="Enter Name Ru"/>
+
+                                    <textarea value={descriptionAlgo.ru.value}
+                                              onChange={e => descriptionAlgo.ru.onChange(e)}
+                                              placeholder="Enter Description Ru"/>
+
+                                    <select value={folderId} onChange={e => setFolderId(e.target.value)}>
+                                        <option value={undefined}/>
+
+                                        {folders && folders.map((folder, index2) => {
+                                            return (
+                                                <option key={index2} value={folder.folderId}>{folder.nameEn}</option>
+                                            )
+                                        })}
+                                    </select>
+
+                                    <textarea value={approximationAlgo.width.value}
+                                              onChange={e => approximationAlgo.width.onChange(e)}
+                                              placeholder="Enter approximation width"/>
+
+                                    <textarea value={approximationAlgo.height.value}
+                                              onChange={e => approximationAlgo.height.onChange(e)}
+                                              placeholder="Enter approximation height"/>
+
+                                    <div>
+                                        <button className="primaryButton" onClick={handleAlgoCreate}
+                                                disabled={nameAlgo.en.value === '' || nameAlgo.ru.value === '' || descriptionAlgo.en.value === '' || descriptionAlgo.ru.value === ''}>{t('button.save')}</button>
+                                        <button className="secondaryButton"
+                                                onClick={handleAlgoClose}>{t('button.cancel')}</button>
+                                    </div>
                                 </div>
-                            </div>
+                            </div>}
                         </div>}
-                    </div>}
 
 
-                    {tabIndex === 1 && <div className={styles.tabsBody}>
+                        {tabIndex === 1 && <div className="tabs-body-content">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th className={"typography-subtitle2 " + styles.tableHeader}>{t('table.folder')}</th>
 
+                                    <th className={"typography-subtitle2 " + styles.tableHeader}>{t('table.name_en')}</th>
 
-                        <table>
-                            <thead>
-                            <tr style={{height: "30px"}}>
-                                <th className={styles.tableHeader}>
-                                    <span className="typography-subtitle2">Parent Folder</span>
-                                </th>
+                                    <th className={"typography-subtitle2 " + styles.tableHeader}>{t('table.name_ru')}</th>
 
-                                <th className={styles.tableHeader}>
-                                    <span className="typography-subtitle2">Name En</span>
-                                </th>
-                                <th className={styles.tableHeader}>
-                                    <span className="typography-subtitle2">Name Ru</span>
-                                </th>
-                                <th className={styles.tableHeader} style={{width: "50px"}}>
-                                    <img width={"20px"} height={"20px"} src={"/add.svg"}
-                                         onClick={e => handleFolderShow(e)}/>
-                                </th>
-                            </tr>
+                                    <th className={styles.tableHeader}
+                                        style={{width: "50px", textAlign: "center", padding: "0"}}>
+                                        <img width={"20px"} height={"20px"} src={"/add.svg"}
+                                             onClick={e => handleFolderShow(e)}/>
+                                    </th>
+                                </tr>
+                                </thead>
 
-                            </thead>
+                                <tbody>
+                                {folders
+                                    .filter(item => item.nameEn.toUpperCase().includes(searchInput.value.toUpperCase()) ||
+                                        item.nameRu.toUpperCase().includes(searchInput.value.toUpperCase()))
+                                    .map((item, index) => {
+                                        const parent = item.parentId && folders.find(folder => folder.folderId === item.parentId) || undefined
 
-                            <tbody>
-                            {folders
-                                .filter(item => item.nameEn.toUpperCase().includes(searchInput.value.toUpperCase()) ||
-                                    item.nameRu.toUpperCase().includes(searchInput.value.toUpperCase()))
-                                .map((item, index) => {
-                                    const parent = item.parentId && folders.find(folder => folder.folderId === item.parentId) || undefined
+                                        return (
 
-                                    return (
-
-                                        <tr key={index} style={{height: "40px"}}>
-                                            <td style={{padding: "5px 10px"}}>
+                                            <tr key={index} style={{height: "40px"}}>
+                                                <td style={{padding: "5px 10px"}}>
                                                 <span
                                                     className="typography-body2">{parent && `${parent.nameEn} (${parent.nameRu})` || item.parentId}</span>
-                                            </td>
+                                                </td>
 
-                                            <td style={{padding: "5px 10px"}}>
-                                                <span className="typography-body2">{item.nameEn}</span>
-                                            </td>
-                                            <td style={{padding: "5px 10px"}}>
-                                                <span className="typography-body2">{item.nameRu}</span>
-                                            </td>
+                                                <td style={{padding: "5px 10px"}}>
+                                                    <span className="typography-body2">{item.nameEn}</span>
+                                                </td>
+                                                <td style={{padding: "5px 10px"}}>
+                                                    <span className="typography-body2">{item.nameRu}</span>
+                                                </td>
 
-                                            <td style={{padding: "5px"}}>
-                                                <div style={{
-                                                    display: "flex",
-                                                    flexDirection: "column",
-                                                    alignItems: "center",
-                                                    justifyContent: "center",
-                                                    gap: "10px"
-                                                }}>
-                                                    <img width={"20px"} src={"/edit-icon.svg"}
-                                                         onClick={e => handleFolderShow(e, item)}/>
+                                                <td style={{padding: "5px"}}>
+                                                    <div style={{
+                                                        display: "flex",
+                                                        flexDirection: "row",
+                                                        alignItems: "center",
+                                                        justifyContent: "center",
+                                                        gap: "5px"
+                                                    }}>
+                                                        <img width={"15px"} src={"/edit-icon.svg"}
+                                                             onClick={e => handleFolderShow(e, item)}/>
 
-                                                    <img width={"20px"} src={"/delete-icon.svg"}
-                                                         onClick={() => handleFolderDelete(item)}/>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    )
-                                })}
-                            </tbody>
-                        </table>
-
-
-                        {showFolderModal && <div className={styles.back}>
-                            <div className={styles.modal}>
-                                <input value={nameFolder.en.value}
-                                       onChange={e => nameFolder.en.onChange(e)}
-                                       placeholder="Enter Name En"/>
+                                                        <img width={"15px"} src={"/delete-icon.svg"}
+                                                             onClick={() => handleFolderDelete(item)}/>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
 
 
-                                <input value={nameFolder.ru.value}
-                                       onChange={e => nameFolder.ru.onChange(e)}
-                                       placeholder="Enter Name Ru"/>
+                            {showFolderModal && <div className="backdrop">
+                                <div className="modal-container">
+                                    <input value={nameFolder.en.value}
+                                           onChange={e => nameFolder.en.onChange(e)}
+                                           placeholder="Enter Name En"/>
+
+                                    <input value={nameFolder.ru.value}
+                                           onChange={e => nameFolder.ru.onChange(e)}
+                                           placeholder="Enter Name Ru"/>
+
+                                    <select value={parentId} onChange={e => setParentId(e.target.value)}>
+                                        <option value={undefined}/>
+
+                                        {folders && folders.map((folder, index2) => {
+                                            return (
+                                                <option key={index2} value={folder.folderId}>{folder.nameEn}</option>
+                                            )
+                                        })}
+                                    </select>
+
+                                    <div>
+                                        <button className="primaryButton"
+                                                onClick={handleFolderCreate}
+                                                disabled={nameFolder.en.value === '' || nameFolder.ru.value === ''}>{t('button.save')}</button>
+                                        <button className="secondaryButton"
+                                                onClick={handleFolderClose}>{t('button.cancel')}</button>
+                                    </div>
+                                </div>
+                            </div>}
+                        </div>}
 
 
-                                <select value={parentId} onChange={e => setParentId(e.target.value)}>
+                        {tabIndex === 2 && <>
+                            <div className="tabs-header" style={{marginBottom: "10px"}}>
+                                <select value={algorithmId} onChange={e => setAlgorithmId(e.target.value)}
+                                        style={{width: "500px"}}>
                                     <option value={undefined}/>
 
-                                    {folders && folders.map((folder, index2) => {
+                                    {algorithms && algorithms.map((algorithm, index) => {
                                         return (
-                                            <option key={index2} value={folder.folderId}>{folder.nameEn}</option>
+                                            <option key={index}
+                                                    value={algorithm.algorithmId}>{algorithm.nameEn}</option>
                                         )
                                     })}
                                 </select>
 
-                                <div>
-                                    <button className={styles.primaryButton}
-                                            onClick={handleFolderCreate}
-                                            disabled={nameFolder.en.value === '' || nameFolder.ru.value === ''}>Save
-                                    </button>
-                                    <button className={styles.secondaryButton} onClick={handleFolderClose}>Cancel
-                                    </button>
-                                </div>
+                                <button className="secondaryButton"
+                                        onClick={() => handleApproximateAlgorithm()}>{t('button.approximate')}</button>
                             </div>
-                        </div>}
-                    </div>}
 
+                            <div style={{height: "calc(100vh - 133px)"}}>
 
-                    {tabIndex === 2 && <div className={styles.tabsBody}>
-                        <div style={{display: "flex", justifyContent: "space-between", width: "100%"}}>
-                            <select value={algorithmId} onChange={e => setAlgorithmId(e.target.value)}
-                                style={{width: "500px"}}>
-                            <option value={undefined}/>
+                                <div className="tabs-body-content">
+                                    {algorithmId && <table>
+                                        <thead>
+                                        <tr>
+                                            <th className={"typography-subtitle2 " + styles.tableHeader}>{t('table.dimensions')}</th>
+                                            <th className={"typography-subtitle2 " + styles.tableHeader}>{t('table.iterations')}</th>
+                                            <th className={"typography-subtitle2 " + styles.tableHeader}>{t('table.processors')}</th>
+                                            <th className={"typography-subtitle2 " + styles.tableHeader}>{t('table.ticks')}</th>
+                                            <th className={styles.tableHeader}
+                                                style={{width: "50px", textAlign: "center", padding: "0"}}>
 
-                            {algorithms && algorithms.map((algorithm, index) => {
-                                return (
-                                    <option key={index} value={algorithm.algorithmId}>{algorithm.nameEn}</option>
-                                )
-                            })}
-                        </select>
+                                                <img role={"button"} width={"20px"} height={"20px"} src={"/add.svg"}
+                                                     onClick={() => setShowDeterminantModal(true)}/>
 
-                            <button className="secondaryButton" onClick={() => handleApproximateAlgorithm()}>Аппроксимировать</button>
-                        </div>
+                                                {showDeterminantModal && <div className="backdrop">
+                                                    <div className="modal-container">
+                                                        <input className="form-control"
+                                                               type="file" style={{height: "auto"}}
+                                                               onChange={getFileContext} disabled={showProgress}/>
 
-                        {algorithmId && <table>
-                            <thead>
-                                <tr style={{height: "30px"}}>
-                                <th className={styles.tableHeader}>
-                                    <span className="typography-subtitle2">Dimensions</span>
-                                </th>
-                                <th className={styles.tableHeader}>
-                                    <span className="typography-subtitle2">Iterations</span>
-                                </th>
-                                <th className={styles.tableHeader}>
-                                    <span className="typography-subtitle2">Processors</span>
-                                </th>
-                                <th className={styles.tableHeader}>
-                                    <span className="typography-subtitle2">Ticks</span>
-                                </th>
-                                <th className={styles.tableHeader} style={{width: "50px"}}>
-
-                                    <img role={"button"} width={"20px"} height={"20px"} src={"/add.svg"} onClick={() => setShowDeterminantModal(true)}/>
-
-
-                                    {showDeterminantModal && <div className={styles.back}>
-                                        <div className={styles.modal}>
-                                            <div className="mb-3">
-                                                <label htmlFor="formFile" className="form-label">Default file
-                                                    input example</label>
-                                                <input className="form-control" type="file" id="formFile" onChange={getFileContext} disabled={showProgress}/>
-                                            </div>
-
-                                            <div>
-                                                <button className={styles.secondaryButton} disabled={showProgress} onClick={() => {setShowDeterminantModal(false); resetChunkProperties();}}>
-                                                    Cancel
-                                                </button>
-
-                                                <button className={styles.primaryButton} disabled={showProgress || !(fileSize > 0)} onClick={() => { setShowProgress(true); fileUpload(counter);}}>
-                                                    {showProgress ? <>
+                                                        <div>
+                                                            <button className="primaryButton"
+                                                                    disabled={showProgress || !(fileSize > 0)}
+                                                                    onClick={() => {
+                                                                        setShowProgress(true);
+                                                                        fileUpload(counter);
+                                                                    }}>
+                                                                {showProgress ? <>
                                                             <span className="spinner-border spinner-border-sm"
                                                                   role="status"
                                                                   aria-hidden="true"/>
-                                                            {progress}%  Loading...
-                                                        </>
-                                                        :
-                                                        <>Upload</>
-                                                    }
-                                                </button>
+                                                                        {progress}% {t('button.loading')}
+                                                                    </>
+                                                                    :
+                                                                    <>{t('button.upload')}</>
+                                                                }
+                                                            </button>
+
+                                                            <button className="secondaryButton" disabled={showProgress}
+                                                                    onClick={() => {
+                                                                        setShowDeterminantModal(false);
+                                                                        resetChunkProperties();
+                                                                    }}>{t('button.cancel')}</button>
+                                                        </div>
+                                                    </div>
+                                                </div>}
+                                            </th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        {determinants
+                                            .filter(item => item.algorithmId === algorithmId)
+                                            .map((item, index) => {
+                                                return (
+                                                    <tr key={index} style={{height: "40px"}}>
+                                                        <td style={{padding: "5px 10px"}}>
+                                                            <span className="typography-body2">{item.dimensions}</span>
+                                                        </td>
+
+                                                        <td style={{padding: "5px 10px"}}>
+                                                        <span
+                                                            className="typography-body2">{item.iterations || ''}</span>
+                                                        </td>
+
+                                                        <td style={{padding: "5px 10px"}}>
+                                                            <span className="typography-body2">{item.processors}</span>
+                                                        </td>
+
+                                                        <td style={{padding: "5px 10px"}}>
+                                                            <span className="typography-body2">{item.ticks}</span>
+                                                        </td>
+
+                                                        <td style={{padding: "5px"}}>
+                                                            <div style={{
+                                                                display: "flex",
+                                                                flexDirection: "row",
+                                                                alignItems: "center",
+                                                                justifyContent: "center",
+                                                                gap: "5px"
+                                                            }}>
+                                                                <img width={"15px"} src={"/edit-icon.svg"}
+                                                                     onClick={() => handleDeterminantShow(item)}/>
+
+                                                                <img width={"15px"} src={"/delete-icon.svg"}
+                                                                     onClick={() => handleDeterminantDelete(item)}/>
+
+                                                                <img width={"16px"} src={"/export.svg"}
+                                                                     onClick={() => handleDeterminantDownload(item)}/>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            })}
+                                        </tbody>
+                                    </table>}
+
+                                    {showDeterminantEdit && <div className="backdrop">
+                                        <div className="modal-container">
+                                            <input value={determinantValue.dimension.value}
+                                                   onChange={e => determinantValue.dimension.onChange(e)}
+                                                   placeholder="Enter dimensions"/>
+
+                                            <input value={determinantValue.iteration.value}
+                                                   onChange={e => determinantValue.iteration.onChange(e)}
+                                                   placeholder="Enter iterations"/>
+
+                                            <div>
+                                                <button className="primaryButton"
+                                                        onClick={handleDeterminantEdit}>{t('button.save')}</button>
+                                                <button className="secondaryButton"
+                                                        onClick={() => setShowDeterminantEdit(false)}>{t('button.cancel')}</button>
                                             </div>
                                         </div>
                                     </div>}
-                                </th>
-                            </tr>
-                            </thead>
-
-                            <tbody>
-
-                            {determinants
-                                .filter(item => item.algorithmId === algorithmId)
-                                .map((item, index) => {
-                                    return (
-
-                                        <tr key={index} style={{height: "40px"}}>
-                                            <td style={{padding: "5px 10px"}}>
-                                                <span className="typography-body2">{item.dimensions}</span>
-                                            </td>
-
-                                            <td style={{padding: "5px 10px"}}>
-                                                <span className="typography-body2">{item.iterations || ''}</span>
-                                            </td>
-
-                                            <td style={{padding: "5px 10px"}}>
-                                                <span className="typography-body2">{item.processors}</span>
-                                            </td>
-
-                                            <td style={{padding: "5px 10px"}}>
-                                                <span className="typography-body2">{item.ticks}</span>
-                                            </td>
-
-                                            <td style={{padding: "5px"}}>
-                                                <img width={"20px"} src={"/edit-icon.svg"} onClick={() => handleDeterminantEdit(item)}/>
-
-                                                <img width={"20px"} src={"/delete-icon.svg"} onClick={() => handleDeterminantDelete(item)}/>
-
-                                                <img src={"/Export.svg"} onClick={DownloadDeterminantHandle}/>
-                                            </td>
-                                        </tr>
-                                    )
-                                })}
-                            </tbody>
-                        </table>}
-
-                        {showDeterminantEdit && <div className={styles.back}>
-                            <div className={styles.modal}>
-                                <input value={determinantValue.dimension.value}
-                                       onChange={e => determinantValue.dimension.onChange(e)}
-                                       placeholder="Enter dimensions"/>
-
-                                <input value={determinantValue.iteration.value}
-                                       onChange={e => determinantValue.iteration.onChange(e)}
-                                       placeholder="Enter iterations"/>
-
-                                <div>
-                                    <button className={styles.primaryButton}
-                                            onClick={handleDeterminantCreate}>Save</button>
-                                    <button className={styles.secondaryButton} onClick={() => setShowDeterminantEdit(false)}>Cancel</button>
                                 </div>
                             </div>
-                        </div>}
+                        </>}
+                    </div>
 
-                    </div>}
-                </div>
+                    {loadind && <div className="build-loader"><span>.</span></div>}
+                </>
+                :
+                <Spinner/>
+            }
 
+            <div className="language-group dropup">
+                <img role="button" src={t('language_icon')} id="dropdownLanguage" data-bs-toggle="dropdown"
+                     aria-expanded="false"/>
 
+                <ul className="dropdown-menu" aria-labelledby="dropdownLanguage">
+                    <LanguageSwitcher lang="ru">
+                        <li className="dropdown-item" style={{display: "flex", gap: "10px", alignItems: "center"}}>
+                            <img src={"/local-ru.svg"}/>
+                            <span className="typography-subtitle2">Русский</span>
+                        </li>
+                    </LanguageSwitcher>
 
-
-                {loadind && <div style={{
-                    position: "absolute",
-                    top: "0",
-                    bottom: "0",
-                    right: "0",
-                    left: "0",
-                    display: "flex",
-                    background: "rgba(45,51,77, 0.8)"
-                }}>
-                    <Loader/>
-                </div>}
-
-            </> : <Spinner/>}
+                    <LanguageSwitcher lang="en">
+                        <li className="dropdown-item" style={{display: "flex", gap: "10px", alignItems: "center"}}>
+                            <img src={"/local-uk.svg"}/>
+                            <span className="typography-subtitle2">English</span>
+                        </li>
+                    </LanguageSwitcher>
+                </ul>
+            </div>
         </div>
     );
 }

@@ -10,6 +10,7 @@
     "export": "next export"
   },
   "dependencies": {
+    "@cortex-js/compute-engine": "^0.12.2",
     "@zeit/next-css": "^1.0.1",
     "bootstrap": "^5.2.3",
     "eslint": "8.34.0",
@@ -28,9 +29,6 @@
     "react-latex-next": "^2.2.0",
     "reactstrap": "^9.1.6",
     "styled-components": "^5.3.9",
-    "@cortex-js/compute-engine": "^0.12.2",
     "uuid": "^9.0.0"
-  },
-  "devDependencies": {
   }
 }

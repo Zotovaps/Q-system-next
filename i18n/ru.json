@@ -1,20 +1,50 @@
 {
     "current_language": "ru",
-    "title": "Добро пожаловать",
     "language_icon": "/local-ru.svg",
-    "algorithms_and_determinants": "Алгоритмы и их Q-детерминанты",
-    "algorithms_compare": "Сравнение алгоритмов",
-    "approximation_service": "Сервис аппроксимации",
-    "documentation": "Документация",
-    "publications": "Публикации",
+    "pages":{
+        "main" : "Главная страница",
+        "algorithms_and_determinants": "Алгоритмы и их Q-детерминанты",
+        "algorithms_compare": "Сравнение алгоритмов",
+        "approximation_service": "Сервис аппроксимации",
+        "documentation": "Документация",
+        "publications": "Публикации",
+        "management": "Управление"
+    },
+    "algorithms": "Алгоритмы",
+    "folders": "Папки",
+    "determinants": "Q-детерминанты",
+    "approximation": "Аппроксимация",
+    "list": "Список",
+    "hierarchy": "Иерархия",
+    "button": {
+        "cancel": "Отмена",
+        "login": "Авторизоваться",
+        "save": "Сохранить",
+        "edit": "Редактировать",
+        "build": "Собрать",
+        "approximate": "Аппроксимировать",
+        "upload": "Загрузить",
+        "loading": "Загрузка..."
+
+    },
+    "table": {
+        "name": "Название",
+        "name_en": "Название (EN)",
+        "name_ru": "Название (RU)",
+        "description": "Описание",
+        "description_en": "Описание (EN)",
+        "description_ru": "Описание (RU)",
+        "folder": "Родительская папка",
+        "dimensions": "Значения параметров размерности",
+        "iterations": "Количество итераций",
+        "processors": "Ширина алгоритма",
+        "ticks": "Высота алгоритма"
+    },
+    "algo_width": "Ширина алгоритма",
+    "algo_height": "Высота алгоритма",
     "log_in": "Войти в систему",
     "log_out": "Выйти из системы",
-    "management": "Управление",
-    "list_tab": "Список",
-    "hierarchy_tab": "Иерархия",
-    "name": "Название",
-    "description": "Описание",
     "search": "Поиск...",
-    "approximation": "Аппроксимация",
-    "determinants": "Q-детрминанты"
+    "enter_login": "Введите логин",
+    "enter_password": "Введите пароль"
 }
