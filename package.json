@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "export": "next export"
+    "export": "next export",
+    "docker": "docker build -t q-system ."
   },
   "dependencies": {
     "@cortex-js/compute-engine": "^0.12.2",
