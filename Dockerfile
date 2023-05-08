@@ -1,7 +1,5 @@
 FROM node:lts-slim
 
-#FROM ubuntu:18.04
-
 RUN mkdir -p /q-system-next
 
 RUN apt-get update

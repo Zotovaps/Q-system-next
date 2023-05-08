@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "export": "next export",
-    "docker": "docker build -t q-system ."
+    "docker": "docker build -t q-system .",
+    "yandex": "docker tag q-system cr.yandex/crpjjsfggrtjj5lt19ql/q-system && docker push cr.yandex/crpjjsfggrtjj5lt19ql/q-system"
   },
   "dependencies": {
     "@cortex-js/compute-engine": "^0.12.2",
