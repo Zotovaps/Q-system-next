@@ -1,32 +1,38 @@
 .tabs {
     display: flex;
     flex-direction: row;
-    gap: 15px;
+    /*gap: 30px;*/
 }
 
 .tab {
     display: flex;
     flex-direction: row;
+    justify-content: center;
     gap: 5px;
 
-    width: fit-content;
+    width: 150px;
     padding: 5px 10px;
     cursor: pointer;
 }
 
 .tab:hover {
-    background: #ECEDF4;
-
+    border-bottom: 2px solid #64B5F6;
 }
 
 .checked {
     display: flex;
     flex-direction: row;
+    justify-content: center;
     gap: 5px;
 
-    width: fit-content;
+    width: 150px;
     padding: 5px 10px;
-    border-bottom: 2px solid #6F7CA0;
+    border-bottom: 2px solid #64B5F6;
     cursor: pointer;
+}
 
+
+.tab > span,
+.checked > span {
+    color: #FFFFFF;
 }

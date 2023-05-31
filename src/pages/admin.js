@@ -11,8 +11,15 @@ import {LanguageSwitcher, useLanguageQuery, useTranslation} from "next-export-i1
 export default function Admin() {
     const {t, i18n} = useTranslation();
     const [query] = useLanguageQuery();
+    const [language, setLanguage] = useState('en');
 
-    const [loadind, setLoading] = useState(false);
+    useEffect(() => {
+        if (query) {
+            setLanguage(query.lang)
+        }
+    }, [query])
+
+    const [loading, setLoading] = useState(false);
     const [algorithms, setAlgorithms] = useState(undefined)
     const [determinants, setDeterminants] = useState(undefined)
     const [folders, setFolders] = useState(undefined)
@@ -269,7 +276,12 @@ export default function Admin() {
     const [algorithmId, setAlgorithmId] = useState(undefined);
     const [showDeterminantModal, setShowDeterminantModal] = useState(false);
     const [showDeterminantEdit, setShowDeterminantEdit] = useState(false);
-    const determinantValue = {dimension: useFormInput(''), iteration: useFormInput(''), processors: useFormInput(''), ticks: useFormInput('')};
+    const determinantValue = {
+        dimension: useFormInput(''),
+        iteration: useFormInput(''),
+        processors: useFormInput(''),
+        ticks: useFormInput('')
+    };
     const [determinantId, setDeterminantId] = useState(undefined)
 
     const chunkSize = 1024 * 1024 * 2;//its 3MB, increase the number measure in mb
@@ -336,7 +348,7 @@ export default function Admin() {
                 body: chunk
             };
 
-            const response = await fetch("https://d5duqpi9k7db8o1dj509.apigw.yandexcloud.net?" + new URLSearchParams({
+            const response = await fetch("https://d5d603o45jf9c91p4q4q.apigw.yandexcloud.net/upload?" + new URLSearchParams({
                 previous: previous,
                 next: fileGuid,
             }), requestOptions)
@@ -550,10 +562,11 @@ export default function Admin() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': localStorage.getItem("accessToken"),
             },
         };
 
-        fetch(`https://bba65mmb49ker14nr711.containers.yandexcloud.net/`, requestOptions)
+        fetch(`https://d5d603o45jf9c91p4q4q.apigw.yandexcloud.net/rebuild`, requestOptions)
             .then(response => response.json())
             .catch(error => {
                 setLoading(false);
@@ -607,22 +620,20 @@ export default function Admin() {
                             <table>
                                 <thead>
                                 <tr>
-                                    <th className={"typography-subtitle2 " + styles.tableHeader}>{t('table.name_ru')}</th>
+                                    <th className="typography-subtitle2">{t('table.name_ru')}</th>
 
-                                    <th className={"typography-subtitle2 " + styles.tableHeader}>{t('table.description_ru')}</th>
+                                    <th className="typography-subtitle2">{t('table.description_ru')}</th>
 
-                                    <th className={"typography-subtitle2 " + styles.tableHeader}>{t('table.name_en')}</th>
+                                    <th className="typography-subtitle2">{t('table.name_en')}</th>
 
-                                    <th className={"typography-subtitle2 " + styles.tableHeader}>{t('table.description_en')}</th>
+                                    <th className="typography-subtitle2">{t('table.description_en')}</th>
 
-                                    <th className={"typography-subtitle2 " + styles.tableHeader}>{t('table.folder')}</th>
+                                    <th className="typography-subtitle2">{t('table.folder')}</th>
 
-                                    <th style={{width: "50px", textAlign: "center", padding: "0"}}>
-                                        <img width={"20px"} height={"20px"} src={"/add.svg"}
-                                             onClick={e => handleAlgoShow(e)}/>
+                                    <th>
+                                        <img src={"/add.svg"} onClick={e => handleAlgoShow(e)}/>
                                     </th>
                                 </tr>
-
                                 </thead>
 
                                 <tbody>
@@ -636,30 +647,27 @@ export default function Admin() {
 
                                         return (
                                             <tr key={index} style={{height: "40px"}}>
-                                                <td style={{padding: "5px 10px"}}>
-                                                <span className="typography-body2">
+                                                <td className="typography-body2" style={{padding: "5px 10px"}}>
                                                     {item.nameRu}
-                                                </span>
                                                 </td>
 
-                                                <td style={{padding: "5px 10px"}}>
-                                                    <span className="typography-body2">{item.descriptionRu}</span>
+                                                <td className="typography-body2" style={{padding: "5px 10px"}}>
+                                                    {item.descriptionRu}
                                                 </td>
 
-                                                <td style={{padding: "5px 10px"}}>
-                                                    <span className="typography-body2">{item.nameEn}</span>
-                                                </td>
-                                                <td style={{padding: "5px 10px"}}>
-                                                    <span className="typography-body2">{item.descriptionEn}</span>
+                                                <td className="typography-body2" style={{padding: "5px 10px"}}>
+                                                    {item.nameEn}
                                                 </td>
 
-                                                <td style={{padding: "5px 10px"}}>
-                                                <span className="typography-body2">
+                                                <td className="typography-body2" style={{padding: "5px 10px"}}>
+                                                    {item.descriptionEn}
+                                                </td>
+
+                                                <td className="typography-body2" style={{padding: "5px 10px"}}>
                                                     {parent && `${parent.nameEn} (${parent.nameRu})` || item.parentId}
-                                                </span>
                                                 </td>
 
-                                                <td style={{padding: "5px"}}>
+                                                <td>
                                                     <div style={{
                                                         display: "flex",
                                                         flexDirection: "row",
@@ -667,10 +675,10 @@ export default function Admin() {
                                                         justifyContent: "center",
                                                         gap: "5px"
                                                     }}>
-                                                        <img width={"15px"} src={"/edit-icon.svg"}
+                                                        <img src={"/edit-icon.svg"}
                                                              onClick={e => handleAlgoShow(e, item)}/>
 
-                                                        <img width={"15px"} src={"/delete-icon.svg"}
+                                                        <img src={"/delete-icon.svg"}
                                                              onClick={() => handleAlgoDelete(item)}/>
                                                     </div>
                                                 </td>
@@ -682,31 +690,52 @@ export default function Admin() {
 
                             {showAlgorithmModal && <div className="backdrop">
                                 <div className="modal-container">
-                                    <input value={nameAlgo.en.value}
-                                           onChange={e => nameAlgo.en.onChange(e)}
-                                           placeholder="Enter Name En"/>
+                                    <div className="in-group">
+                                        <label className="typography-subtitle2"
+                                               style={{color: "#6F7CA0"}}>{t('table.name_ru')}</label>
+                                        <input value={nameAlgo.ru.value}
+                                               onChange={e => nameAlgo.ru.onChange(e)}
+                                               placeholder="Enter Name Ru"/>
+                                    </div>
 
-                                    <textarea value={descriptionAlgo.en.value}
-                                              onChange={e => descriptionAlgo.en.onChange(e)}
-                                              placeholder="Enter Description En"/>
+                                    <div className="in-group">
+                                        <label className="typography-subtitle2"
+                                               style={{color: "#6F7CA0"}}>{t('table.description_ru')}</label>
+                                        <textarea value={descriptionAlgo.ru.value}
+                                                  onChange={e => descriptionAlgo.ru.onChange(e)}
+                                                  placeholder="Enter Description Ru"/>
+                                    </div>
 
-                                    <input value={nameAlgo.ru.value}
-                                           onChange={e => nameAlgo.ru.onChange(e)}
-                                           placeholder="Enter Name Ru"/>
+                                    <div className="in-group">
+                                        <label className="typography-subtitle2"
+                                               style={{color: "#6F7CA0"}}>{t('table.name_en')}</label>
+                                        <input value={nameAlgo.en.value}
+                                               onChange={e => nameAlgo.en.onChange(e)}
+                                               placeholder="Enter Name En"/>
+                                    </div>
 
-                                    <textarea value={descriptionAlgo.ru.value}
-                                              onChange={e => descriptionAlgo.ru.onChange(e)}
-                                              placeholder="Enter Description Ru"/>
+                                    <div className="in-group">
+                                        <label className="typography-subtitle2"
+                                               style={{color: "#6F7CA0"}}>{t('table.description_en')}</label>
+                                        <textarea value={descriptionAlgo.en.value}
+                                                  onChange={e => descriptionAlgo.en.onChange(e)}
+                                                  placeholder="Enter Description En"/>
+                                    </div>
 
-                                    <select value={folderId} onChange={e => setFolderId(e.target.value)}>
-                                        <option value={undefined}/>
+                                    <div className="in-group">
+                                        <label className="typography-subtitle2"
+                                               style={{color: "#6F7CA0"}}>{t('table.folder')}</label>
+                                        <select value={folderId} onChange={e => setFolderId(e.target.value)}>
+                                            <option value={undefined}/>
 
-                                        {folders && folders.map((folder, index2) => {
-                                            return (
-                                                <option key={index2} value={folder.folderId}>{folder.nameEn}</option>
-                                            )
-                                        })}
-                                    </select>
+                                            {folders && folders.map((folder, index2) => {
+                                                return (
+                                                    <option key={index2}
+                                                            value={folder.folderId}>{folder.nameEn}</option>
+                                                )
+                                            })}
+                                        </select>
+                                    </div>
 
                                     <textarea value={approximationAlgo.width.value}
                                               onChange={e => approximationAlgo.width.onChange(e)}
@@ -731,17 +760,13 @@ export default function Admin() {
                             <table>
                                 <thead>
                                 <tr>
-                                    <th className={"typography-subtitle2 " + styles.tableHeader}>{t('table.folder')}</th>
+                                    <th className="typography-subtitle2">{t('table.name_en')}</th>
 
-                                    <th className={"typography-subtitle2 " + styles.tableHeader}>{t('table.name_en')}</th>
+                                    <th className="typography-subtitle2">{t('table.name_ru')}</th>
 
-                                    <th className={"typography-subtitle2 " + styles.tableHeader}>{t('table.name_ru')}</th>
+                                    <th className="typography-subtitle2">{t('table.folder')}</th>
 
-                                    <th className={styles.tableHeader}
-                                        style={{width: "50px", textAlign: "center", padding: "0"}}>
-                                        <img width={"20px"} height={"20px"} src={"/add.svg"}
-                                             onClick={e => handleFolderShow(e)}/>
-                                    </th>
+                                    <th><img src={"/add.svg"} onClick={e => handleFolderShow(e)}/></th>
                                 </tr>
                                 </thead>
 
@@ -753,21 +778,20 @@ export default function Admin() {
                                         const parent = item.parentId && folders.find(folder => folder.folderId === item.parentId) || undefined
 
                                         return (
-
                                             <tr key={index} style={{height: "40px"}}>
-                                                <td style={{padding: "5px 10px"}}>
-                                                <span
-                                                    className="typography-body2">{parent && `${parent.nameEn} (${parent.nameRu})` || item.parentId}</span>
+                                                <td className="typography-body2" style={{padding: "5px 10px"}}>
+                                                    {item.nameEn}
                                                 </td>
 
-                                                <td style={{padding: "5px 10px"}}>
-                                                    <span className="typography-body2">{item.nameEn}</span>
-                                                </td>
-                                                <td style={{padding: "5px 10px"}}>
-                                                    <span className="typography-body2">{item.nameRu}</span>
+                                                <td className="typography-body2" style={{padding: "5px 10px"}}>
+                                                    {item.nameRu}
                                                 </td>
 
-                                                <td style={{padding: "5px"}}>
+                                                <td className="typography-body2" style={{padding: "5px 10px"}}>
+                                                    {parent && `${parent.nameEn} (${parent.nameRu})` || item.parentId}
+                                                </td>
+
+                                                <td>
                                                     <div style={{
                                                         display: "flex",
                                                         flexDirection: "row",
@@ -775,10 +799,10 @@ export default function Admin() {
                                                         justifyContent: "center",
                                                         gap: "5px"
                                                     }}>
-                                                        <img width={"15px"} src={"/edit-icon.svg"}
+                                                        <img src={"/edit-icon.svg"}
                                                              onClick={e => handleFolderShow(e, item)}/>
 
-                                                        <img width={"15px"} src={"/delete-icon.svg"}
+                                                        <img src={"/delete-icon.svg"}
                                                              onClick={() => handleFolderDelete(item)}/>
                                                     </div>
                                                 </td>
@@ -788,26 +812,40 @@ export default function Admin() {
                                 </tbody>
                             </table>
 
-
                             {showFolderModal && <div className="backdrop">
                                 <div className="modal-container">
-                                    <input value={nameFolder.en.value}
-                                           onChange={e => nameFolder.en.onChange(e)}
-                                           placeholder="Enter Name En"/>
+                                    <div className="in-group">
+                                        <label className="typography-subtitle2"
+                                               style={{color: "#6F7CA0"}}>{t('table.name_en')}</label>
+                                        <input value={nameFolder.en.value}
+                                               onChange={e => nameFolder.en.onChange(e)}
+                                               placeholder="Enter Name En"/>
+                                    </div>
 
-                                    <input value={nameFolder.ru.value}
-                                           onChange={e => nameFolder.ru.onChange(e)}
-                                           placeholder="Enter Name Ru"/>
+                                    <div className="in-group">
+                                        <label className="typography-subtitle2"
+                                               style={{color: "#6F7CA0"}}>{t('table.name_ru')}</label>
+                                        <input value={nameFolder.ru.value}
+                                               onChange={e => nameFolder.ru.onChange(e)}
+                                               placeholder="Enter Name Ru"/>
+                                    </div>
 
-                                    <select value={parentId} onChange={e => setParentId(e.target.value)}>
-                                        <option value={undefined}/>
+                                    <div className="in-group">
+                                        <label className="typography-subtitle2"
+                                               style={{color: "#6F7CA0"}}>{t('table.folder')}</label>
+                                        <select value={parentId} onChange={e => setParentId(e.target.value)}>
+                                            <option value={undefined}/>
 
-                                        {folders && folders.map((folder, index2) => {
-                                            return (
-                                                <option key={index2} value={folder.folderId}>{folder.nameEn}</option>
-                                            )
-                                        })}
-                                    </select>
+                                            {folders && folders.map((folder, index2) => {
+                                                if (!selectedFolder || folder.folderId !== selectedFolder.folderId) {
+                                                    return (
+                                                        <option key={index2}
+                                                                value={folder.folderId}>{language === 'en' ? folder.nameEn : folder.nameRu}</option>
+                                                    )
+                                                }
+                                            })}
+                                        </select>
+                                    </div>
 
                                     <div>
                                         <button className="primaryButton"
@@ -822,15 +860,16 @@ export default function Admin() {
 
 
                         {tabIndex === 2 && <>
-                            <div className="tabs-header" style={{marginBottom: "10px"}}>
+                            <div className="tabs-header">
                                 <select value={algorithmId} onChange={e => setAlgorithmId(e.target.value)}
                                         style={{width: "500px"}}>
                                     <option value={undefined}/>
 
                                     {algorithms && algorithms.map((algorithm, index) => {
                                         return (
-                                            <option key={index}
-                                                    value={algorithm.algorithmId}>{algorithm.nameEn}</option>
+                                            <option key={index} value={algorithm.algorithmId}>
+                                                {language === 'en' ? algorithm.nameEn : algorithm.nameRu}
+                                            </option>
                                         )
                                     })}
                                 </select>
@@ -840,25 +879,20 @@ export default function Admin() {
                             </div>
 
                             <div style={{height: "calc(100vh - 133px)"}}>
-
                                 <div className="tabs-body-content">
                                     {algorithmId && <table>
                                         <thead>
                                         <tr>
-                                            <th className={"typography-subtitle2 " + styles.tableHeader}>{t('table.dimensions')}</th>
-                                            <th className={"typography-subtitle2 " + styles.tableHeader}>{t('table.iterations')}</th>
-                                            <th className={"typography-subtitle2 " + styles.tableHeader}>{t('table.processors')}</th>
-                                            <th className={"typography-subtitle2 " + styles.tableHeader}>{t('table.ticks')}</th>
-                                            <th className={styles.tableHeader}
-                                                style={{width: "50px", textAlign: "center", padding: "0"}}>
-
-                                                <img role={"button"} width={"20px"} height={"20px"} src={"/add.svg"}
-                                                     onClick={() => setShowDeterminantModal(true)}/>
+                                            <th className="typography-subtitle2">{t('table.dimensions')}</th>
+                                            <th className="typography-subtitle2">{t('table.iterations')}</th>
+                                            <th className="typography-subtitle2">{t('table.processors')}</th>
+                                            <th className="typography-subtitle2">{t('table.ticks')}</th>
+                                            <th><img src={"/add.svg"} onClick={() => setShowDeterminantModal(true)}/>
 
                                                 {showDeterminantModal && <div className="backdrop">
                                                     <div className="modal-container">
                                                         <input className="form-control"
-                                                               type="file" style={{height: "auto"}}
+                                                               type="file" style={{height: "auto", minHeight: "auto"}}
                                                                onChange={getFileContext} disabled={showProgress}/>
 
                                                         <div>
@@ -868,12 +902,8 @@ export default function Admin() {
                                                                         setShowProgress(true);
                                                                         fileUpload(counter);
                                                                     }}>
-                                                                {showProgress ? <>
-                                                            <span className="spinner-border spinner-border-sm"
-                                                                  role="status"
-                                                                  aria-hidden="true"/>
-                                                                        {progress}% {t('button.loading')}
-                                                                    </>
+                                                                {showProgress ?
+                                                                    <>{Math.floor(progress)}%</>
                                                                     :
                                                                     <>{t('button.upload')}</>
                                                                 }
@@ -897,24 +927,23 @@ export default function Admin() {
                                             .map((item, index) => {
                                                 return (
                                                     <tr key={index} style={{height: "40px"}}>
-                                                        <td style={{padding: "5px 10px"}}>
-                                                            <span className="typography-body2">{item.dimensions}</span>
+                                                        <td className="typography-body2" style={{padding: "5px 10px"}}>
+                                                            {item.dimensions}
                                                         </td>
 
-                                                        <td style={{padding: "5px 10px"}}>
-                                                        <span
-                                                            className="typography-body2">{item.iterations || ''}</span>
+                                                        <td className="typography-body2" style={{padding: "5px 10px"}}>
+                                                            {item.iterations || ''}
                                                         </td>
 
-                                                        <td style={{padding: "5px 10px"}}>
-                                                            <span className="typography-body2">{item.processors}</span>
+                                                        <td className="typography-body2" style={{padding: "5px 10px"}}>
+                                                            {item.processors}
                                                         </td>
 
-                                                        <td style={{padding: "5px 10px"}}>
-                                                            <span className="typography-body2">{item.ticks}</span>
+                                                        <td className="typography-body2" style={{padding: "5px 10px"}}>
+                                                            {item.ticks}
                                                         </td>
 
-                                                        <td style={{padding: "5px"}}>
+                                                        <td>
                                                             <div style={{
                                                                 display: "flex",
                                                                 flexDirection: "row",
@@ -922,13 +951,13 @@ export default function Admin() {
                                                                 justifyContent: "center",
                                                                 gap: "5px"
                                                             }}>
-                                                                <img width={"15px"} src={"/edit-icon.svg"}
+                                                                <img src={"/edit-icon.svg"}
                                                                      onClick={() => handleDeterminantShow(item)}/>
 
-                                                                <img width={"15px"} src={"/delete-icon.svg"}
+                                                                <img src={"/delete-icon.svg"}
                                                                      onClick={() => handleDeterminantDelete(item)}/>
 
-                                                                <img width={"16px"} src={"/export.svg"}
+                                                                <img width="16" height="16" src={"/export.svg"}
                                                                      onClick={() => handleDeterminantDownload(item)}/>
                                                             </div>
                                                         </td>
@@ -940,13 +969,21 @@ export default function Admin() {
 
                                     {showDeterminantEdit && <div className="backdrop">
                                         <div className="modal-container">
-                                            <input value={determinantValue.dimension.value}
-                                                   onChange={e => determinantValue.dimension.onChange(e)}
-                                                   placeholder="Enter dimensions"/>
+                                            <div className="in-group">
+                                                <label className="typography-subtitle2"
+                                                       style={{color: "#6F7CA0"}}>{t('table.dimensions')}</label>
+                                                <input value={determinantValue.dimension.value}
+                                                       onChange={e => determinantValue.dimension.onChange(e)}
+                                                       placeholder="Enter dimensions"/>
+                                            </div>
 
-                                            <input value={determinantValue.iteration.value}
-                                                   onChange={e => determinantValue.iteration.onChange(e)}
-                                                   placeholder="Enter iterations"/>
+                                            <div className="in-group">
+                                                <label className="typography-subtitle2"
+                                                       style={{color: "#6F7CA0"}}>{t('table.iterations')}</label>
+                                                <input value={determinantValue.iteration.value}
+                                                       onChange={e => determinantValue.iteration.onChange(e)}
+                                                       placeholder="Enter iterations"/>
+                                            </div>
 
                                             <div>
                                                 <button className="primaryButton"
@@ -961,31 +998,16 @@ export default function Admin() {
                         </>}
                     </div>
 
-                    {loadind && <div className="build-loader"><span>.</span></div>}
+                    {loading && <div className="build-loader"><span>.</span></div>}
                 </>
                 :
                 <Spinner/>
             }
 
-            <div className="language-group dropup">
-                <img role="button" src={t('language_icon')} id="dropdownLanguage" data-bs-toggle="dropdown"
-                     aria-expanded="false"/>
-
-                <ul className="dropdown-menu" aria-labelledby="dropdownLanguage">
-                    <LanguageSwitcher lang="ru">
-                        <li className="dropdown-item" style={{display: "flex", gap: "10px", alignItems: "center"}}>
-                            <img src={"/local-ru.svg"}/>
-                            <span className="typography-subtitle2">Русский</span>
-                        </li>
-                    </LanguageSwitcher>
-
-                    <LanguageSwitcher lang="en">
-                        <li className="dropdown-item" style={{display: "flex", gap: "10px", alignItems: "center"}}>
-                            <img src={"/local-uk.svg"}/>
-                            <span className="typography-subtitle2">English</span>
-                        </li>
-                    </LanguageSwitcher>
-                </ul>
+            <div className="language-group">
+                <LanguageSwitcher lang={t('another_language')}>
+                    <img role="button" src={t('language_icon')} alt="language"/>
+                </LanguageSwitcher>
             </div>
         </div>
     );

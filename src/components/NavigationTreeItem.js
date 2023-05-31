@@ -8,21 +8,22 @@ const NavigationTreeItemStyled = styled.div`
   gap: 5px;
   
   box-sizing: border-box;
-  height: 28px;
+  height: 30px;
   width: ${props => `calc(100% - ${props.level} * 15px)`};
   min-width: 200px;
   padding: 5px 10px;
   //margin-left: ${props => `calc(${props.level} * 15px)`};
   
-  background: ${props => props.isFolder ? "#ECEDF4" : "#FAFBFF"};
-  border: 1px solid #ECEDF4;
+  background: ${props => props.isFolder ? "#d9def1" : "none"};
+  border: 2px solid #d9def1;
   border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
 
   &:hover {
-    background: ${props => props.isFolder ? "#6F7CA0" : "#f7f8fa"};
-    border: 1px solid ${props => props.isFolder ? "#6F7CA0" : "#ECEDF4"};
+    background: ${props => props.isFolder ? "#64B5F6" : "none"};
+    border-color: #64B5F6;
+    outline: 1px solid ${props => props.isFolder ? "#64B5F6" : "#64B5F6"};
     color: ${props => props.isFolder ? "#FFFFFF" : "#2D334D"};
   }
 
@@ -31,7 +32,7 @@ const NavigationTreeItemStyled = styled.div`
     font-weight: 400;
     font-size: 14px;
     line-height: 120%;
-    //color: #2D334D;
+    color: ${props => props.isFolder ? "#2D334D" : "#FFFFFF"};
 
     text-overflow: ellipsis;
     white-space: nowrap;

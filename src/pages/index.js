@@ -31,15 +31,22 @@ export default function Index({}) {
             },
         };
 
-        fetch("https://d5d603o45jf9c91p4q4q.apigw.yandexcloud.net/http/basic/authorize", requestOptions)
-            .then(response => response.text())
-            .then(result => {
-                if (result !== 'false') {
-                    localStorage && localStorage.setItem("accessToken", "Bearer " + result);
-                    setShow(false);
-                }
+        fetch("https://d5d603o45jf9c91p4q4q.apigw.yandexcloud.net/auth", requestOptions)
+            .then(response => {
+                if (!response.ok) throw new Error("HTTP status " + response.status);
+
+                return response.text()
             })
-            .catch(error => console.log('error', error));
+            .then(result => {
+                if (result === 'false') throw new Error("Auth error");
+
+                localStorage && localStorage.setItem("accessToken", "Bearer " + result);
+                setShow(false);
+            })
+            .catch(error => {
+                console.log('error', error)
+                alert("Ошибка авторизации!")
+            });
     }
 
     const handleExit = () => {
@@ -58,13 +65,21 @@ export default function Index({}) {
                     <div className={styles.gridNavItem}>{t('pages.algorithms_and_determinants')}</div>
                 </Link>
 
-                <div className={styles.gridNavItem}>{t('pages.algorithms_compare')}</div>
+                <Link href={{pathname: "/compare", query: query}}>
+                    <div className={styles.gridNavItem}>{t('pages.algorithms_compare')}</div>
+                </Link>
 
-                <div className={styles.gridNavItem}>{t('pages.approximation_service')}</div>
+                <Link href={{pathname: "/compare", query: query}}>
+                    <div className={styles.gridNavItem}>{t('pages.approximation_service')}</div>
+                </Link>
 
-                <div className={styles.gridNavItem}>{t('pages.documentation')}</div>
+                <Link href={{pathname: "/compare", query: query}}>
+                    <div className={styles.gridNavItem}>{t('pages.documentation')}</div>
+                </Link>
 
-                <div className={styles.gridNavItem}>{t('pages.publications')}</div>
+                <Link href={{pathname: "/compare", query: query}}>
+                    <div className={styles.gridNavItem}>{t('pages.publications')}</div>
+                </Link>
 
                 <div className={styles.gridNavItem} onClick={token ? handleExit : handleShow}>
                     {token ? t('log_out') : t('log_in')}
@@ -94,28 +109,11 @@ export default function Index({}) {
                 </div>
             </div>}
 
-
-            <div className="language-group dropup">
-                <img role="button" src={t('language_icon')} id="dropdownLanguage" data-bs-toggle="dropdown"
-                     aria-expanded="false"/>
-
-                <ul className="dropdown-menu" aria-labelledby="dropdownLanguage">
-                    <LanguageSwitcher lang="ru">
-                        <li className="dropdown-item" style={{display: "flex", gap: "10px", alignItems: "center"}}>
-                            <img src={"/local-ru.svg"}/>
-                            <span className="typography-subtitle2">Русский</span>
-                        </li>
-                    </LanguageSwitcher>
-
-                    <LanguageSwitcher lang="en">
-                        <li className="dropdown-item" style={{display: "flex", gap: "10px", alignItems: "center"}}>
-                            <img src={"/local-uk.svg"}/>
-                            <span className="typography-subtitle2">English</span>
-                        </li>
-                    </LanguageSwitcher>
-                </ul>
+            <div className="language-group">
+                <LanguageSwitcher lang={t('another_language')}>
+                    <img role="button" src={t('language_icon')} alt="language"/>
+                </LanguageSwitcher>
             </div>
-
         </div>
     )
 }

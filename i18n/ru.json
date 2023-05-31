@@ -1,5 +1,6 @@
 {
     "current_language": "ru",
+    "another_language": "en",
     "language_icon": "/local-ru.svg",
     "pages":{
         "main" : "Главная страница",

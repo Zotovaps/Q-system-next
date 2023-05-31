@@ -103,12 +103,21 @@ export default function Algorithm({algorithm, processors, ticks, determinants}) 
 
                         {variables && variables.length > 0 && variables.map((item, index) => {
                             return (
-                                <input key={index} type="number" value={variables[index]} onChange={(e) => {
-                                    setVariables(variables.map((v, i) => {
-                                        if (index === i) return e.target.value;
-                                        return v;
-                                    }))
-                                }} style={{maxWidth: "1500px"}}/>
+                                <div key={index} className="in-group">
+                                    <label className={"typography-subtitle2"}>X{index+1}</label>
+                                    <input  type="number" value={variables[index]} onChange={(e) => {
+                                        if (e.target.value >= 0)
+                                        {
+                                            setVariables(variables.map((v, i) => {
+                                                if (index === i) return e.target.value;
+                                                return v;
+                                            }))
+                                        }
+
+                                    }} style={{maxWidth: "1500px"}} min="0"/>
+                                </div>
+
+
                             )
                         })}
 
@@ -151,9 +160,7 @@ export default function Algorithm({algorithm, processors, ticks, determinants}) 
                                     </div>
                                 </div>
                             </div>
-
                         </div>
-
                     </div>}
 
                     {tabIndex === 1 && <div className="tabs-body-content">
@@ -204,25 +211,10 @@ export default function Algorithm({algorithm, processors, ticks, determinants}) 
                 </div>
             </>}
 
-            <div className="language-group dropup">
-                <img role="button" src={t('language_icon')} id="dropdownLanguage" data-bs-toggle="dropdown"
-                     aria-expanded="false"/>
-
-                <ul className="dropdown-menu" aria-labelledby="dropdownLanguage">
-                    <LanguageSwitcher lang="ru">
-                        <li className="dropdown-item" style={{display: "flex", gap: "10px", alignItems: "center"}}>
-                            <img src={"/local-ru.svg"}/>
-                            <span className="typography-subtitle2">Русский</span>
-                        </li>
-                    </LanguageSwitcher>
-
-                    <LanguageSwitcher lang="en">
-                        <li className="dropdown-item" style={{display: "flex", gap: "10px", alignItems: "center"}}>
-                            <img src={"/local-uk.svg"}/>
-                            <span className="typography-subtitle2">English</span>
-                        </li>
-                    </LanguageSwitcher>
-                </ul>
+            <div className="language-group">
+                <LanguageSwitcher lang={t('another_language')}>
+                    <img role="button" src={t('language_icon')} alt="language"/>
+                </LanguageSwitcher>
             </div>
         </div>
     )

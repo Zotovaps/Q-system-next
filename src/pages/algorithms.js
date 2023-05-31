@@ -49,11 +49,11 @@ const Algorithms = ({algorithms, folders}) => {
                 {tabIndex === 0 && <div className="tabs-body-content">
                     <table>
                         <thead>
-                        <tr>
-                            <th className="typography-subtitle2">{t('table.name')}</th>
-                            <th className="typography-subtitle2">{t('table.description')}</th>
-                            <th/>
-                        </tr>
+                            <tr>
+                                <th className="typography-subtitle2">{t('table.name')}</th>
+                                <th className="typography-subtitle2">{t('table.description')}</th>
+                                <th/>
+                            </tr>
                         </thead>
 
                         <tbody>
@@ -65,14 +65,16 @@ const Algorithms = ({algorithms, folders}) => {
                             .map((item, index) => {
                                 return (
                                     <tr key={index} style={{height: "40px"}}>
-                                        <td className="typography-body2"
-                                            style={{padding: "5px 10px"}}>{language === 'en' ? item.nameEn : item.nameRu}</td>
-                                        <td className="typography-body2"
-                                            style={{padding: "5px 10px"}}>{language === 'en' ? item.descriptionEn : item.descriptionRu}</td>
+                                        <td className="typography-body2" style={{padding: "5px 10px"}}>
+                                            {language === 'en' ? item.nameEn : item.nameRu}
+                                        </td>
 
-                                        <td style={{padding: "0 5px"}}>
-                                            <Link key={index}
-                                                  href={{pathname: `/algorithms/${item.algorithmId}`, query: query}}>
+                                        <td className="typography-body2" style={{padding: "5px 10px"}}>
+                                            {language === 'en' ? item.descriptionEn : item.descriptionRu}
+                                        </td>
+
+                                        <td>
+                                            <Link href={{pathname: `/algorithms/${item.algorithmId}`, query: query}}>
                                                 <img src={"/eye.svg"}/>
                                             </Link>
                                         </td>
@@ -110,25 +112,10 @@ const Algorithms = ({algorithms, folders}) => {
                 </div>}
             </div>
 
-            <div className="language-group dropup">
-                <img role="button" src={t('language_icon')} id="dropdownLanguage" data-bs-toggle="dropdown"
-                     aria-expanded="false"/>
-
-                <ul className="dropdown-menu" aria-labelledby="dropdownLanguage">
-                    <LanguageSwitcher lang="ru">
-                        <li className="dropdown-item" style={{display: "flex", gap: "10px", alignItems: "center"}}>
-                            <img src={"/local-ru.svg"}/>
-                            <span className="typography-subtitle2">Русский</span>
-                        </li>
-                    </LanguageSwitcher>
-
-                    <LanguageSwitcher lang="en">
-                        <li className="dropdown-item" style={{display: "flex", gap: "10px", alignItems: "center"}}>
-                            <img src={"/local-uk.svg"}/>
-                            <span className="typography-subtitle2">English</span>
-                        </li>
-                    </LanguageSwitcher>
-                </ul>
+            <div className="language-group">
+                <LanguageSwitcher lang={t('another_language')}>
+                    <img role="button" src={t('language_icon')} alt="language"/>
+                </LanguageSwitcher>
             </div>
         </div>
     )
