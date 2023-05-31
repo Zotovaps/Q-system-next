@@ -101,25 +101,28 @@ export default function Algorithm({algorithm, processors, ticks, determinants}) 
                 <div className="tabs-body">
                     {tabIndex === 0 && <div className="tabs-body-content">
 
-                        {variables && variables.length > 0 && variables.map((item, index) => {
-                            return (
-                                <div key={index} className="in-group">
-                                    <label className={"typography-subtitle2"}>X{index+1}</label>
-                                    <input  type="number" value={variables[index]} onChange={(e) => {
-                                        if (e.target.value >= 0)
-                                        {
-                                            setVariables(variables.map((v, i) => {
-                                                if (index === i) return e.target.value;
-                                                return v;
-                                            }))
-                                        }
+                        <div style={{display: "flex", gap: "10px", width: "100%", maxWidth: "1500px", flexWrap: "wrap"}}>
+                            {variables && variables.length > 0 && variables.map((item, index) => {
+                                return (
+                                    <div key={index} className="in-group" style={{width: "max-content"}}>
+                                        <label className={"typography-subtitle2"}>X{index+1}</label>
+                                        <input  type="number" value={variables[index]} onChange={(e) => {
+                                            if (e.target.value >= 0)
+                                            {
+                                                setVariables(variables.map((v, i) => {
+                                                    if (index === i) return e.target.value;
+                                                    return v;
+                                                }))
+                                            }
 
-                                    }} style={{maxWidth: "1500px"}} min="0"/>
-                                </div>
+                                        }} style={{maxWidth: "1500px"}} min="0"/>
+                                    </div>
 
 
-                            )
-                        })}
+                                )
+                            })}
+                        </div>
+
 
                         <div style={{
                             display: "flex",

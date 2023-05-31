@@ -266,31 +266,38 @@ input:invalid {
   color: #EC96A0;
 }
 
-input[type="search"] {
+input[type="search"],
+input[type="number"] {
   width: 200px;
   font-size: 14px;
 }
 
-input[type="search"]:not(:placeholder-shown) {
+input[type="search"]:not(:placeholder-shown),
+input[type="number"]:not(:placeholder-shown) {
   border: 1px solid #d9def1;
   color: #FFFFFF;
 }
 
 input[type="search"]:hover,
-input[type="search"]:focus {
+input[type="search"]:focus,
+input[type="number"]:hover,
+input[type="number"]:focus {
   border: 1px solid #64B5F6;
 }
 
-input[type="search"]::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+input[type="search"]::placeholder,
+input[type="number"]::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: #FFFFFF;
   opacity: 1; /* Firefox */
 }
 
-input[type="search"]:-ms-input-placeholder { /* Internet Explorer 10-11 */
+input[type="search"]:-ms-input-placeholder,
+input[type="number"]:-ms-input-placeholder { /* Internet Explorer 10-11 */
   color: #FFFFFF;
 }
 
-input[type="search"]::-ms-input-placeholder { /* Microsoft Edge */
+input[type="search"]::-ms-input-placeholder,
+input[type="number"]::-ms-input-placeholder { /* Microsoft Edge */
   color: #FFFFFF;
 }
 
