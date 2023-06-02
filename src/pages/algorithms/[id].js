@@ -133,6 +133,20 @@ export default function Algorithm({algorithm, processors, ticks, determinants}) 
                             width: "100%",
                             maxWidth: "1500px"
                         }}>
+                            <div className="card" style={{width: "calc(50% - 20px)", minWidth: "700px"}}>
+                                {ticks.data.img && <img src={ticks.data.img} className="card-img-top"
+                                                        style={{width: "100%", maxWidth: "700px"}} alt="..."/>}
+
+                                <div className="card-body">
+                                    <h5 className="card-title" data-bs-toggle="collapse" href="#collapseHeight"
+                                        role="button" aria-expanded="false" aria-controls="collapseHeight">
+                                        {t('algo_height')}: {height}
+                                    </h5>
+                                    <div className="collapse" id="collapseHeight">
+                                        <InlineMath>{algorithm.dataHeight.replaceAll('cdot', '\\cdot').replaceAll('*', ' \\cdot ')}</InlineMath>
+                                    </div>
+                                </div>
+                            </div>
 
                             <div className="card" style={{width: "calc(50% - 20px)", minWidth: "700px"}}>
                                 {processors.data.img && <img src={processors.data.img} className="card-img-top"
@@ -145,21 +159,6 @@ export default function Algorithm({algorithm, processors, ticks, determinants}) 
                                     </h5>
                                     <div className="collapse" id="collapseWidth">
                                         <InlineMath>{algorithm.dataWidth.replaceAll('cdot', '\\cdot').replaceAll('*', ' \\cdot ')}</InlineMath>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="card" style={{width: "calc(50% - 20px)", minWidth: "700px"}}>
-                                {ticks.data.img && <img src={ticks.data.img} className="card-img-top"
-                                                        style={{width: "100%", maxWidth: "700px"}} alt="..."/>}
-
-                                <div className="card-body">
-                                    <h5 className="card-title" data-bs-toggle="collapse" href="#collapseHeight"
-                                        role="button" aria-expanded="false" aria-controls="collapseHeight">
-                                        {t('algo_height')}: {height}
-                                    </h5>
-                                    <div className="collapse" id="collapseHeight">
-                                        <InlineMath>{algorithm.dataHeight.replaceAll('cdot', '\\cdot').replaceAll('*', ' \\cdot ')}</InlineMath>
                                     </div>
                                 </div>
                             </div>
