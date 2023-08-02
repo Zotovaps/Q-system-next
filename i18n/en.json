@@ -39,7 +39,9 @@
     "dimensions": "Dimensions",
     "iterations": "Iterations",
     "processors": "Processors",
-    "ticks": "Ticks"
+    "ticks": "Ticks",
+    "speed": "Speed",
+    "number": "Number of processors"
   },
   "algo_width": "Algorithm width",
   "algo_height": "Algorithm height",
@@ -47,5 +49,10 @@
   "log_out": "Log Out",
   "search": "Search...",
   "enter_login": "Enter login",
-  "enter_password": "Enter password"
+  "enter_password": "Enter password",
+  "compare_same": "Equally",
+  "compare_faster": "Faster",
+  "compare_slower": "Slower",
+  "compare_less": "Less",
+  "compare_more": "More"
 }

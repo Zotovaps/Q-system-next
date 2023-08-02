@@ -69,15 +69,13 @@ export default function Index({}) {
                     <div className={styles.gridNavItem}>{t('pages.algorithms_compare')}</div>
                 </Link>
 
-                <Link href={{pathname: "/compare", query: query}}>
-                    <div className={styles.gridNavItem}>{t('pages.approximation_service')}</div>
-                </Link>
+                <div className={styles.gridNavItem}>{t('pages.approximation_service')}</div>
 
-                <Link href={{pathname: "/compare", query: query}}>
+                <Link href={{pathname: "/documentation", query: query}}>
                     <div className={styles.gridNavItem}>{t('pages.documentation')}</div>
                 </Link>
 
-                <Link href={{pathname: "/compare", query: query}}>
+                <Link href={{pathname: "/publications", query: query}}>
                     <div className={styles.gridNavItem}>{t('pages.publications')}</div>
                 </Link>
 

@@ -143,7 +143,7 @@ export default function Algorithm({algorithm, processors, ticks, determinants}) 
                                         {t('algo_height')}: {height}
                                     </h5>
                                     <div className="collapse" id="collapseHeight">
-                                        <InlineMath>{algorithm.dataHeight.replaceAll('cdot', '\\cdot').replaceAll('*', ' \\cdot ')}</InlineMath>
+                                        <InlineMath>{algorithm.dataHeight}</InlineMath>
                                     </div>
                                 </div>
                             </div>
@@ -158,7 +158,7 @@ export default function Algorithm({algorithm, processors, ticks, determinants}) 
                                         {t('algo_width')}: {width}
                                     </h5>
                                     <div className="collapse" id="collapseWidth">
-                                        <InlineMath>{algorithm.dataWidth.replaceAll('cdot', '\\cdot').replaceAll('*', ' \\cdot ')}</InlineMath>
+                                        <InlineMath>{algorithm.dataWidth}</InlineMath>
                                     </div>
                                 </div>
                             </div>
@@ -175,7 +175,7 @@ export default function Algorithm({algorithm, processors, ticks, determinants}) 
 
                                 <th className="typography-subtitle2">{t('table.processors')}</th>
                                 <th className="typography-subtitle2">{t('table.ticks')}</th>
-                                <th style={{width: "30px"}}></th>
+                                {/*<th style={{width: "30px"}}></th>*/}
                             </tr>
                             </thead>
 
@@ -202,7 +202,7 @@ export default function Algorithm({algorithm, processors, ticks, determinants}) 
                                         </td>
 
                                         <td style={{padding: "0 5px"}}>
-                                            <img width={"16px"} src={"/export.svg"}/>
+                                            {/*<img width={"16px"} src={"/export.svg"}/>*/}
                                         </td>
                                     </tr>
                                 )
