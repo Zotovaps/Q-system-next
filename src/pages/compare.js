@@ -23,6 +23,18 @@ const Compare = () => {
     const [algorithms, setAlgorithms] = useState([]);
     const [algorithmIdF, setAlgorithmIdF] = useState(undefined);
     const [algorithmIdS, setAlgorithmIdS] = useState(undefined);
+    const [results, setResults] = useState(undefined);
+
+
+    useEffect(() => {
+        if (algorithmIdF && algorithmIdS) {
+            fetch(`https://d5dk4o8s4tqnirc00ktu.apigw.yandexcloud.net/api/v1/algorithm/${algorithmIdF}/compare/${algorithmIdS}`)
+                .then(response => response.json())
+                .then(result => {
+                    setResults(result)
+                })
+        } else setResults(undefined)
+    }, [algorithmIdS, algorithmIdF])
 
     const compareNumber = (x, y) => {
         if (x === y) return 0;
@@ -32,22 +44,11 @@ const Compare = () => {
     }
 
     const compareAlgorithms = () => {
+        const result1 = results.ticks
+        const result2 = results.processors
 
         const firstAlgo = algorithms.find(item => item.algorithmId === algorithmIdF)
         const secondAlgo = algorithms.find(item => item.algorithmId === algorithmIdS)
-
-        const computeEngine = new ce.ComputeEngine();
-        computeEngine.set({x_1: 5, x_2: 1, x_3: 1, x_4: 1, x_5: 1, x_6: 1})
-
-        let widthExpr1 = computeEngine.parse(firstAlgo.dataHeight);
-        let heightExpr1 = computeEngine.parse(firstAlgo.dataWidth);
-
-        let widthExpr2 = computeEngine.parse(secondAlgo.dataHeight);
-        let heightExpr2 = computeEngine.parse(secondAlgo.dataWidth);
-
-        const result1 = compareNumber(widthExpr1.N().valueOf(), widthExpr2.N().valueOf())
-        const result2 = compareNumber(heightExpr1.N().valueOf(), heightExpr2.N().valueOf())
-
 
         return (
             <table>
@@ -69,11 +70,11 @@ const Compare = () => {
                         {language === 'en' ? firstAlgo.descriptionEn : firstAlgo.descriptionRu}
                     </td>
                     <td className="typography-body2" style={{padding: "5px 10px"}}>
-                        {result1 === 0 ? t('compare_same') : result1 > 0? t('compare_faster'): t('compare_slower')}
+                        {result1 === 0 ? t('compare_same') : result1 > 0 ? t('compare_faster') : t('compare_slower')}
 
                     </td>
                     <td className="typography-body2" style={{padding: "5px 10px"}}>
-                        {result2 === 0 ? t('compare_same'): result2 > 0? t('compare_more'): t('compare_less')}
+                        {result2 === 0 ? t('compare_same') : result2 > 0 ? t('compare_more') : t('compare_less')}
                     </td>
                 </tr>
                 <tr>
@@ -84,10 +85,10 @@ const Compare = () => {
                         {language === 'en' ? secondAlgo.descriptionEn : secondAlgo.descriptionRu}
                     </td>
                     <td className="typography-body2" style={{padding: "5px 10px"}}>
-                        {result1 === 0 ? t('compare_same'): -result1 > 0? t('compare_faster'): t('compare_slower')}
+                        {result1 === 0 ? t('compare_same') : -result1 > 0 ? t('compare_faster') : t('compare_slower')}
                     </td>
                     <td className="typography-body2" style={{padding: "5px 10px"}}>
-                        {result2 === 0 ? t('compare_same'): -result2 > 0? t('compare_more'): t('compare_less')}
+                        {result2 === 0 ? t('compare_same') : -result2 > 0 ? t('compare_more') : t('compare_less')}
                     </td>
                 </tr>
                 </tbody>
@@ -163,7 +164,7 @@ const Compare = () => {
 
 
             <div style={{margin: "0 auto", width: "100%", maxWidth: "1500px"}}>
-                {algorithms && algorithmIdS && algorithmIdF && compareAlgorithms()}
+                {algorithms && algorithmIdS && algorithmIdF && results && compareAlgorithms()}
             </div>
 
             <div className="language-group">
